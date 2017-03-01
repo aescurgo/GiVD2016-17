@@ -20,7 +20,8 @@ SOURCES += \
     BoundaryObject.cpp \
     ReadFile.cpp \
     Cara.cpp \
-    plane.cpp
+    plane.cpp \
+    Triangle.cpp
 
 
 include(deployment.pri)
@@ -161,4 +162,5 @@ HEADERS += \
     BoundaryObject.h \
     ReadFile.h \
     Cara.h \
-    plane.h
+    plane.h \
+    Triangle.h
