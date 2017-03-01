@@ -39,16 +39,16 @@ Scene::~Scene()
 
 void Scene::RandomScene() {
 
-    objects.push_back(new Sphere(vec3(0, 0, -1), 0.5, new Lambertian(vec3(0.5, 0.2, 0.7))));
+   // objects.push_back(new Sphere(vec3(0, 0, -1), 0.5, new Lambertian(vec3(0.5, 0.2, 0.7))));
 
 
-    objects.push_back(new Sphere(vec3(0,-1,-1), 0.5, new Lambertian(vec3(0.1, 0.2, 0.5))));
+    //objects.push_back(new Sphere(vec3(0,-1,-1), 0.5, new Lambertian(vec3(0.1, 0.2, 0.5))));
     objects.push_back(new Sphere(vec3(1,-1,-1), 0.5, new Lambertian(vec3(0.8, 0.6, 0.2))));
     objects.push_back(new Sphere(vec3(-1,-1,-1), 0.5, new Lambertian(vec3(0.6, 0.8, 0.2))));
     objects.push_back(new Sphere(vec3(-1,0,-1), -0.45, new Lambertian(vec3(0.2, 0.6, 0.8))));
-    objects.push_back(new Plane(vec3(1,0,0),vec3(4,0,0), new Lambertian(vec3(0.1, 0.2, 0.5))));
-    objects.push_back(new Plane(vec3(0,0,1),vec3(0,0,4), new Lambertian(vec3(0.8, 0.6, 0.2))));
-    objects.push_back(new Plane(vec3(0,1,0),vec3(0,4,0), new Lambertian(vec3(0.6, 0.8, 0.2))));
+    objects.push_back(new Plane(vec3(1,0,0),vec3(0,0,0), new Lambertian(vec3(0.1, 0.2, 0.5))));
+    objects.push_back(new Plane(vec3(0,0,1),vec3(0,0,0), new Lambertian(vec3(0.8, 0.6, 0.2))));
+    objects.push_back(new Plane(vec3(0,1,0),vec3(0,0,0), new Lambertian(vec3(0.6, 0.8, 0.2))));
 
 
 //    objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
@@ -73,19 +73,24 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 
     bool inter = false;
     //lanzo un rayo y miramos si intersecta con un objeto
-
+    int i = 0;
     for(Object *o: objects)
     {
         if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
-            if (info.t < infoTemp.t)  info.t = info.t ;//coprobamos si la t de info es más pequeña
+            //if (i == 0) infoTemp = info;
+            if (info.t < infoTemp.t) info = info ;//coprobamos si la t de info es más pequeña
             //que la infoTemp del objeto que estamos mirando
             else info =infoTemp;
             inter = true;
         }
+        i++;
     }
 
-    if (inter) return true;
+    if (inter){
+        //info = infoTemp;
+        return true;
+    }
     else return false;
 
 

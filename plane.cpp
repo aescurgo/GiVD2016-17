@@ -12,24 +12,22 @@ bool Plane::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
     float ln = glm::dot(r.direction,this->normal);
 
 
+    if (glm::abs(ln) == 0.0) return false;//the line is in paralel
 
-    if (glm::abs(ln) > 0.0)//est en paralelo
+    if (glm::abs(ln)!= 0.0)//when ln different that 0
     {
 
-        float d = glm::dot((pPuntual - r.direction), normal) / ln;
-        if (d == 0.0f)
-        {
-            return false;
-        }
-        else
+        float d = glm::dot((this->pPuntual - r.initialPoint()), this->normal) / ln;
+        if (d >= 0)
         {
             rec.t = d;
-            rec.p = r.pointAtParameter(rec.t);//TODO
+            rec.p = r.pointAtParameter(rec.t);
             rec.normal = normal ;
             rec.mat_ptr = material;
 
             return true;
         }
+
 
     }
 
