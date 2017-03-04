@@ -4,6 +4,7 @@ Plane::Plane(vec3 n,vec3 pPunt, Material *m) : Object(m)
 {
     normal = n;
     pPuntual = pPunt;//Change to pPass
+    d = getDistance();
 }
 
 
@@ -33,4 +34,10 @@ bool Plane::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
 
     return false;
+}
+
+float Plane::getDistance(){
+
+    this->d = -(this->normal.x * this->pPuntual.x + this->normal.y * this->pPuntual.y + this->normal.z * this->pPuntual.z);
+
 }

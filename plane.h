@@ -12,6 +12,7 @@ private:
     float d;
 public:
     Plane(vec3 normal,vec3 pPuntual, Material *m);
+    float getDistance();
     bool hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const;
     ~Plane (){}
 };

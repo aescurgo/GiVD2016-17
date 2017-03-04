@@ -10,6 +10,7 @@
 #include "Lambertian.h"
 #include "Camera.h"
 #include "plane.h"
+#include "Triangle.h"
 
 class Scene: public Hitable
 {
