@@ -15,14 +15,14 @@ bool Triangle::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
 
     //distance from the origin to the plane
-    float d = glm::dot(this->normal,r.direction);
+    float d = glm::dot(r.direction,this->normal);
 
+    if(d == 0) return false;
+    if(d < 0) return false;//ray and plane are parallel
 
-    if(glm::abs(d) < 0) return false;//ray and plane are parallel
-
-    float d1 = glm::dot(this->normal,this->p1);
+    float d1 = glm::dot(this->p1,this->normal);
     //t distance  from the ray origin to point
-    float t = ((glm::dot(this->normal, r.origin) +d1) / d);
+    float t = (d / (glm::dot(-r.origin,this->normal)+ d1));
 
 
     if (t < 0) return false; //triangle is behind
@@ -38,14 +38,14 @@ bool Triangle::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
     C = glm::cross(edge1,vp1);
 
-    //d11 = glm::dot(r.origin,edge1);
+    d11 = glm::dot(r.origin,edge1);
     if(glm::dot(this->normal, C) + d11 < 0) return false; //P is on the right side
 
     vec3 edge2 = glm::normalize(this->p3 - this->p2);
     vec3 vp2 = P - this->p2;
 
     C = glm::cross(edge2,vp2);
-    //d11 = glm::dot(r.origin,edge2);
+    d11 = glm::dot(r.origin,edge2);
 
     if(glm::dot(this->normal, C)+d11 < 0) return false; //P is on the right side
 
@@ -53,7 +53,7 @@ bool Triangle::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
     vec3 vp3 = P - this->p3;
 
     C = glm::cross(edge3,vp3);
-    //d11 = glm::dot(r.origin,edge3);
+    d11 = glm::dot(r.origin,edge3);
 
     if(glm::dot(this->normal, C)+d11 < 0) return false; //P is on the right side
 

@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "plane.h"
 #include "Triangle.h"
+#include "Cube.h"
 
 class Scene: public Hitable
 {

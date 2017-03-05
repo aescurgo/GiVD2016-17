@@ -56,6 +56,9 @@ void Scene::RandomScene() {
     objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2))));
 
 
+    //objects.push_back(new Cube(vec3(1,1,1),vec3(2,2,2), new Lambertian(vec3(0.8, 0.2, 0.2))));
+
+
 
 //    objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
