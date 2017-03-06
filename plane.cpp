@@ -3,41 +3,42 @@
 Plane::Plane(vec3 n,vec3 pPunt, Material *m) : Object(m)
 {
     normal = n;
-    pPuntual = pPunt;//Change to pPass
+    pPass = pPunt;//Change to pPass
     d = getDistance();
 }
 
 
 bool Plane::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
-    float ln = glm::dot(r.direction,this->normal);
+    //nx * x + ny * y *nz * z + d = 0
 
+    float t = -(glm::dot(this->normal,r.origin) + this->d)  / glm::dot(this->normal,r.direction);
 
-    if (glm::abs(ln) == 0.0) return false;//the line is in paralel
+    float nd = glm::normalize(glm::dot(this->normal,r.direction));
 
-    if (glm::abs(ln)!= 0.0)//when ln different that 0
+    if (glm::abs(nd) == 0.001) return false; //is in parallel with the ray.
+    if (glm::abs(nd) > 0.001)
     {
-
-        float d = glm::dot((this->pPuntual - r.initialPoint()), this->normal) / ln;
-        if (d >= 0)
+        if (t >= 0.001)
         {
-            rec.t = d;
+            rec.t = t;
             rec.p = r.pointAtParameter(rec.t);
             rec.normal = normal ;
             rec.mat_ptr = material;
-
             return true;
         }
 
-
     }
-
-
     return false;
 }
 
+/**
+ * @brief Plane::getDistance
+ * @return ditance
+ * The distance whitch separetes with origin coord.
+ */
 float Plane::getDistance(){
-
-    this->d = -(this->normal.x * this->pPuntual.x + this->normal.y * this->pPuntual.y + this->normal.z * this->pPuntual.z);
+    float dir = -(glm::dot(this->normal,this->pPass));
+    return dir;
 
 }
