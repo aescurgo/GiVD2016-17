@@ -4,6 +4,8 @@
 #include "Hitable.h"
 #include "Material.h"
 #include "Lambertian.h"
+#include <iostream>
+using namespace std;
 
 // Es la classe pare de tots els objectes que s'han de visualitzar. Es fa una classe Objectes que hereda de Hitable
 // i ha d'implementar el metode hit

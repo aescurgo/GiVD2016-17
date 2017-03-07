@@ -6,68 +6,69 @@ Triangle::Triangle(vec3 p1,vec3 p2,vec3 p3, Material *m) : Object(m)
     this->p2 = p2;
     this->p3 = p3;
     getNormal();
+    this->d = getDistance();
 }
 
 bool Triangle::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
-    //TODO no funciona
+    float t = -(glm::dot(this->normal,r.origin) + this->d)  / glm::dot(this->normal,r.direction);
+
+    float nd = glm::normalize(glm::dot(this->normal,r.direction));
+
+
+    if (glm::abs(nd) == 0.001) return false; //is in parallel with the ray.
+    if (glm::abs(nd) < 0.001) return false;
+
+    vec3 P = r.pointAtParameter(t);
+
+    //check if the ray point is inside of triangle
+
+    //coord barycentric (u,v,w)
+    float u;
+    float v;
+    float w;
+    float TriABC = (glm::normalize(glm::dot(this->p2 - this->p1,this->p3 - this->p1)) / 2.0);
+
+    //triangle area's incluing the P
+    float TriABP = (glm::normalize(glm::dot(this->p2 - this->p1, P - this->p1)) / 2.0);
+    float TriBCP = (glm::normalize(glm::dot(this->p3 - this->p2, P - this->p2)) / 2.0);
+    float TriCAP = (glm::normalize(glm::dot(this->p1 - this->p3, P - this->p3)) / 2.0);
+
+    u = TriCAP / TriABC;
+    v = TriABP / TriABC;
+    w = TriBCP / TriABC;
+
+    float res = glm::abs(u+v+w);
+    //cout <<"res " << res <<endl;
+    if( res== 1){
+        if((0 <= res)&&(res <= 1)){
+            rec.t = t;
+            rec.p = P;
+            rec.normal = this->normal ;
+            rec.mat_ptr = material;
+            return true;
+        }
+    }
 
 
 
-    //distance from the origin to the plane
-    float d = glm::dot(r.direction,this->normal);
 
-    if(d == 0) return false;
-    if(d < 0) return false;//ray and plane are parallel
-
-    float d1 = glm::dot(this->p1,this->normal);
-    //t distance  from the ray origin to point
-    float t = (d / (glm::dot(-r.origin,this->normal)+ d1));
-
-
-    if (t < 0) return false; //triangle is behind
-
-    vec3 P = r.pointAtParameter(t);//point
-
-    //other test
-    vec3 C;
-    float d11 =0;
-
-    vec3 edge1 = glm::normalize(this->p2 - this->p1);
-    vec3 vp1 = P - this->p1;
-
-    C = glm::cross(edge1,vp1);
-
-    d11 = glm::dot(r.origin,edge1);
-    if(glm::dot(this->normal, C) + d11 < 0) return false; //P is on the right side
-
-    vec3 edge2 = glm::normalize(this->p3 - this->p2);
-    vec3 vp2 = P - this->p2;
-
-    C = glm::cross(edge2,vp2);
-    d11 = glm::dot(r.origin,edge2);
-
-    if(glm::dot(this->normal, C)+d11 < 0) return false; //P is on the right side
-
-    vec3 edge3 = glm::normalize(this->p1 - this->p3);
-    vec3 vp3 = P - this->p3;
-
-    C = glm::cross(edge3,vp3);
-    d11 = glm::dot(r.origin,edge3);
-
-    if(glm::dot(this->normal, C)+d11 < 0) return false; //P is on the right side
-
-    //if arrived here...intersect done
-    rec.t = t;
-    rec.p = P;
-    rec.normal = normal ;
-    rec.mat_ptr = material;
-
-    return true;
+    return false;
 }
 
+/**
+ * @brief Triangle::getNormal
+ * normal of triangle
+ */
 void Triangle::getNormal(){
     //N = ((P2-P1)* (P3-P1)) / |((P2-P1)* (P3-P1)| )
     this->normal = glm::normalize(glm::cross(this->p2 - this->p1,this->p3 - this->p1));
 
+}
+
+
+float Triangle::getDistance(){
+    //float dir = -(glm::dot(this->normal,this->pPass));
+    //return dir;
+    return 0;
 }

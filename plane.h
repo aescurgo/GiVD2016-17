@@ -8,10 +8,10 @@ class Plane: public Object
 {
 private:
     vec3 normal;
-    vec3 pPuntual;
+    vec3 pPass;
     float d;
 public:
-    Plane(vec3 normal,vec3 pPuntual, Material *m);
+    Plane(vec3 normal,vec3 pPass, Material *m);
     float getDistance();
     bool hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const;
     ~Plane (){}

@@ -81,21 +81,20 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
     HitInfo infoTemp;
 
     bool inter = false;
-    //lanzo un rayo y miramos si intersecta con un objeto
-    int i = 0;
     for(Object *o: objects)
     {
         if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
-            //if (i == 0) infoTemp = info;
+
 
             if (info.t < infoTemp.t) info = info ;//coprobamos si la t de info es más pequeña
             //que la infoTemp del objeto que estamos mirando
             else info =infoTemp;
             inter = true;
         }
-        i++;
+
     }
+
 
     if (inter){
         //info = infoTemp;
@@ -142,7 +141,10 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
     HitInfo info;//no tocar (es el principal)
     if(this->hit(ray,0,info.t,info))
     {
+
+        //aqyi llamar a blinnPhong()
         color = vec3(info.normal.x,info.normal.y,info.normal.z);
+        //color = vec3(1,0,0);
     }
     else
     {
