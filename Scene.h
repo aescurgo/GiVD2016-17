@@ -12,6 +12,7 @@
 #include "plane.h"
 #include "Triangle.h"
 #include "Cube.h"
+#include "Light.h"
 
 class Scene: public Hitable
 {
@@ -31,11 +32,15 @@ public:
     // Vector d'objectes continguts a l'escena
     std::vector<Object*> objects;
 
+    //Vector de Llums a l'escena
+    std::vector<Light*> llums;
+
     // Camera: on está l'observador
     Camera *cam;
 
 private:
     void RandomScene();
+    void addLight();
 
 };
 

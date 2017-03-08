@@ -18,6 +18,7 @@ Scene::Scene()
     RandomScene();
 
     // TODO: Cal afegir llums a l'escena (Fase 2)
+    addLight();
 }
 
 Scene::~Scene()
@@ -35,6 +36,9 @@ Scene::~Scene()
                     delete (Triangle *)(objects[i]);
         }
     }
+
+    //TODO delete all lights
+
     delete cam;
 }
 
@@ -53,14 +57,22 @@ void Scene::RandomScene() {
     //objects.push_back(new Plane(vec3(1,0,0),vec3(1,1,1), new Lambertian(vec3(0.1, 0.2, 0.5))));
     //objects.push_back(new Plane(vec3(0,0,1),vec3(1,1,1), new Lambertian(vec3(0.8, 0.6, 0.2))));
     //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.6, 0.8, 0.2))));
-    objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2))));
-
-
+    //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2))));
     //objects.push_back(new Cube(vec3(1,1,1),vec3(2,2,2), new Lambertian(vec3(0.8, 0.2, 0.2))));
+    //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
+    //phase 2
+    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.8, 0.8, 0.0))));
+    objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.5, 0.5, 0.5))));
 
+}
 
-//    objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
+/*
+ *
+ */
+void Scene::addLight()
+{
+    //llums.push_back(new Light());
 
 }
 
@@ -79,17 +91,15 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
     //aqui mirar la minima o no de t con info.  ...iterando con la t min me quedo con la t
 
     HitInfo infoTemp;
-
     bool inter = false;
     for(Object *o: objects)
     {
         if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
-
-
-            if (info.t < infoTemp.t) info = info ;//coprobamos si la t de info es más pequeña
+            if (info.t < infoTemp.t) infoTemp = info ;//coprobamos si la t de info es más pequeña
             //que la infoTemp del objeto que estamos mirando
-            else info =infoTemp;
+            //else info =info;
+
             inter = true;
         }
 
@@ -97,7 +107,7 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 
 
     if (inter){
-        //info = infoTemp;
+        info = infoTemp;
         return true;
     }
     else return false;
@@ -143,8 +153,11 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
     {
 
         //aqyi llamar a blinnPhong()
-        color = vec3(info.normal.x,info.normal.y,info.normal.z);
+        //color = vec3(info.normal.x,info.normal.y,info.normal.z);
         //color = vec3(1,0,0);
+
+        //applying gamma correction
+        color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
     }
     else
     {

@@ -22,7 +22,8 @@ SOURCES += \
     Cara.cpp \
     plane.cpp \
     Triangle.cpp \
-    Cube.cpp
+    Cube.cpp \
+    Light.cpp
 
 
 include(deployment.pri)
@@ -165,4 +166,5 @@ HEADERS += \
     Cara.h \
     plane.h \
     Triangle.h \
-    Cube.h
+    Cube.h \
+    Light.h
