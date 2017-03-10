@@ -19,6 +19,8 @@ Scene::Scene()
 
     // TODO: Cal afegir llums a l'escena (Fase 2)
     addLight();
+    
+    setAmbientGlobal(vec3(0.01,0.01,0.01));
 }
 
 Scene::~Scene()
@@ -42,6 +44,10 @@ Scene::~Scene()
     delete cam;
 }
 
+void Scene::setAmbientGlobal(vec3 ambient){
+    this->ambGlobal = ambient;
+}
+
 // TODO: Metode que genera una escena random de numObjects de tipus esfera, a diferents posicions,
 // amb diferents radis i diferents materials. S'usa drand48 per generar numeros random
 
@@ -62,8 +68,8 @@ void Scene::RandomScene() {
     //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
     //phase 2
-    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.8, 0.8, 0.0))));
-    objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.5, 0.5, 0.5))));
+    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
 
 }
 
@@ -72,7 +78,7 @@ void Scene::RandomScene() {
  */
 void Scene::addLight()
 {
-    //llums.push_back(new Light());
+    llums.push_back(new PuntualLight(vec3(2,8,10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));
 
 }
 
@@ -157,7 +163,8 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
         //color = vec3(1,0,0);
 
         //applying gamma correction
-        color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
+        //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
+        color = blinnPhong(info.p,info.normal,info.mat_ptr,true);
     }
     else
     {
@@ -167,5 +174,22 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
     }
 
      return color;
+}
+
+vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra)
+{
+    vec3 color;
+    normal = glm::normalize(normal);
+    vec3 L = glm::normalize(llums[0]->pos - point);
+    vec3 V = glm::normalize(-point);
+    vec3 H = glm::normalize((L + V) / glm::cross(L,V));
+    float NH = glm::normalize(glm::dot(normal,H));
+
+
+    //color = glm::normalize(material->ambient * llums[0]->ambient); //only Ka * Ia
+    color = material->diffuse * llums[0]->difus * glm::dot(L , normal) ; //only Ks * Id * L * N
+    //color = glm::normalize(material->specular * llums[0]->especular * glm::pow(NH,material->shininess));
+
+    return color;
 }
 

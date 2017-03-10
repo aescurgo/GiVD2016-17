@@ -13,6 +13,7 @@
 #include "Triangle.h"
 #include "Cube.h"
 #include "Light.h"
+#include "Puntuallight.h"
 
 class Scene: public Hitable
 {
@@ -38,9 +39,16 @@ public:
     // Camera: on está l'observador
     Camera *cam;
 
+    //global ambient
+    vec3 ambGlobal;
+
+    //blinn-phong method
+    vec3 blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra);
+
 private:
     void RandomScene();
     void addLight();
+    void setAmbientGlobal(vec3 ambient);
 
 };
 

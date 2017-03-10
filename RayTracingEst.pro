@@ -23,7 +23,8 @@ SOURCES += \
     plane.cpp \
     Triangle.cpp \
     Cube.cpp \
-    Light.cpp
+    Light.cpp \
+    Puntuallight.cpp
 
 
 include(deployment.pri)
@@ -167,4 +168,5 @@ HEADERS += \
     plane.h \
     Triangle.h \
     Cube.h \
-    Light.h
+    Light.h \
+    Puntuallight.h

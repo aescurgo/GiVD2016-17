@@ -16,6 +16,10 @@ public:
     virtual bool scatter(const Ray& r_in, const HitInfo& rec, vec3& color, Ray& scattered) const = 0;
 
     vec3 diffuse;
+    vec3 ambient;
+    vec3 specular;
+    float shininess;
+
 
 protected:
     vec3 RandomInSphere() const;

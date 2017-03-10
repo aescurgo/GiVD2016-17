@@ -1,8 +1,11 @@
 #include "Lambertian.h"
 
-Lambertian::Lambertian(const vec3& color):Material()
+Lambertian::Lambertian( const vec3& Ka,const vec3& color, const vec3& Ks, float shininess):Material()
 {
     diffuse = color;
+    ambient = Ka;
+    specular = Ks;
+    this->shininess = shininess;
 }
 
 Lambertian::~Lambertian()
