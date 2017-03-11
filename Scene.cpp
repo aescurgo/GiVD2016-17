@@ -173,23 +173,28 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
 
     }
 
-     return color;
+     return color + this->ambGlobal;
 }
 
 vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra)
 {
-    vec3 color;
+    vec3 color, ambient,difus, especular,posLight;
+
     normal = glm::normalize(normal);
-    vec3 L = glm::normalize(llums[0]->pos - point);
-    vec3 V = glm::normalize(-point);
-    vec3 H = glm::normalize((L + V) / glm::cross(L,V));
-    float NH = glm::normalize(glm::dot(normal,H));
+    point = glm::normalize(point);
+    posLight = glm::normalize(llums[0]->pos);
+
+    vec3 L = posLight - point;
+    vec3 V = point;//TODO: deberia ser -point ??
+    vec3 H = (L + V) / glm::length(L+V);
+    float NH = glm::dot(normal,H);
 
 
-    //color = glm::normalize(material->ambient * llums[0]->ambient); //only Ka * Ia
-    color = material->diffuse * llums[0]->difus * glm::dot(L , normal) ; //only Ks * Id * L * N
-    //color = glm::normalize(material->specular * llums[0]->especular * glm::pow(NH,material->shininess));
+    ambient = material->ambient * llums[0]->ambient; //only Ka * Ia
+    difus = material->diffuse * llums[0]->difus * glm::max(glm::dot(L , normal),0.0f) ; //only Ks * Id * L * N
+    especular =(material->specular * llums[0]->especular) * glm::max(glm::pow(NH,material->shininess),0.0f);
 
+    color = ambient + difus + especular;
     return color;
 }
 
