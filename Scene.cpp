@@ -197,28 +197,35 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
 
     HitInfo infoShadow;
     float factShadow = 1.0;
-    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//TODO ponerle tambie la t min y la t max
+    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//if intersect with object, we apply a attenuation coefficient
         factShadow = 0.0;
-        //return material->ambient * this->ambGlobal;
     }
 
     ambient = material->ambient * llums[0]->ambient; //only Ka * Ia
     difus = material->diffuse * llums[0]->difus * glm::max(glm::dot(L , normal),0.0f); //only Ks * Id * L * N
     especular =(material->specular * llums[0]->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
 
-    color = ambient + factShadow * (difus +  especular);
+    float atenuacion = getAtenuacion4Point(llums[0]->pos, point);
+    color = ambient + atenuacion * (factShadow * (difus +  especular));
     return color;
 }
 
 bool Scene::hitShadow(Ray *raig,float t_min, float t_max, HitInfo& info){
     for(Object *ob: objects)
     {
-        if (ob->hit(*raig,0,info.t,info))//si intersecta
-        {
-            return true;
-        }
-
+        if (ob->hit(*raig,0,info.t,info))return true;
     }
-
 }
+
+float Scene::getAtenuacion4Point(vec3 posLight, vec3 point)
+{
+    float atenuacion;
+    vec3 d = glm::normalize(posLight - point);
+
+    atenuacion = 1 /(0.5 + ( 0.01 * glm::dot(d,d)));
+
+    return atenuacion;
+}
+
+
 
