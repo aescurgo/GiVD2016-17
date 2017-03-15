@@ -45,6 +45,9 @@ public:
     //blinn-phong method
     vec3 blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra);
 
+    //hit shodow
+    bool hitShadow(Ray *r, float t_min, float t_max, HitInfo& info);
+
 private:
     void RandomScene();
     void addLight();

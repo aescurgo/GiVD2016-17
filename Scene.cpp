@@ -58,13 +58,13 @@ void Scene::RandomScene() {
 
     //objects.push_back(new Sphere(vec3(0,-1,-1), 0.5, new Lambertian(vec3(0.1, 0.2, 0.5))));
     //objects.push_back(new Sphere(vec3(1,-1,-1), 0.5, new Lambertian(vec3(0.8, 0.6, 0.2))));
-    //objects.push_back(new Sphere(vec3(-1,-1,-1), 0.5, new Lambertian(vec3(0.6, 0.8, 0.2))));
-    //objects.push_back(new Sphere(vec3(-1,0,-1), -0.45, new Lambertian(vec3(0.2, 0.6, 0.8))));
-    //objects.push_back(new Plane(vec3(1,0,0),vec3(1,1,1), new Lambertian(vec3(0.1, 0.2, 0.5))));
-    //objects.push_back(new Plane(vec3(0,0,1),vec3(1,1,1), new Lambertian(vec3(0.8, 0.6, 0.2))));
-    //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.6, 0.8, 0.2))));
-    //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2))));
-    //objects.push_back(new Cube(vec3(1,1,1),vec3(2,2,2), new Lambertian(vec3(0.8, 0.2, 0.2))));
+    //objects.push_back(new Sphere(vec3(-1,-1,-1), 0.5, new Lambertian(vec3(0.6, 0.8, 0.2),vec3(0.8, 0.1, 0.0),vec3(0.0,1.0,1.0),5.0)));
+    //objects.push_back(new Sphere(vec3(-1,0,-1), -0.45, new Lambertian(vec3(0.2, 0.6, 0.8),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Plane(vec3(1,0,0),vec3(1,1,1), new Lambertian(vec3(0.1, 0.2, 0.5),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Plane(vec3(0,0,1),vec3(1,1,1), new Lambertian(vec3(0.8, 0.6, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.6, 0.8, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Cube(vec3(1,1,1),vec3(-1,-1,-1), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
     //phase 2
@@ -102,9 +102,9 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
     {
         if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
-            if (info.t < infoTemp.t) infoTemp = info ;//coprobamos si la t de info es más pequeña
+            if (info.t < infoTemp.t) info = info ;//coprobamos si la t de info es más pequeña
             //que la infoTemp del objeto que estamos mirando
-            //else info =info;
+            else info =infoTemp;
 
             inter = true;
         }
@@ -113,7 +113,7 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 
 
     if (inter){
-        info = infoTemp;
+        //info = infoTemp;
         return true;
     }
     else return false;
@@ -164,7 +164,10 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
 
         //applying gamma correction
         //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
-        color = blinnPhong(info.p,info.normal,info.mat_ptr,true);
+
+        color = (info.mat_ptr->ambient * this->ambGlobal) + blinnPhong(info.p,info.normal,info.mat_ptr,true);
+
+
     }
     else
     {
@@ -173,7 +176,7 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
 
     }
 
-     return color + this->ambGlobal;
+     return color;
 }
 
 vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra)
@@ -181,20 +184,41 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
     vec3 color, ambient,difus, especular,posLight;
 
     normal = glm::normalize(normal);
-    point = glm::normalize(point);
-    posLight = glm::normalize(llums[0]->pos);
 
-    vec3 L = posLight - point;
-    vec3 V = point;//TODO: deberia ser -point ??
-    vec3 H = (L + V) / glm::length(L+V);
+    vec3 L = glm::normalize(llums[0]->pos - point);
+    vec3 V = glm::normalize(vec3(0, 0, 0) - point);//TODO mirarlo
+    vec3 H = glm::normalize((L + V));
     float NH = glm::dot(normal,H);
 
+    //Aqui lanzamos otroel rayoSombra
+    float ep = 0.01;
+    vec3 pointRay = point + (ep * L);
+    Ray *rShadow =  new Ray(pointRay, L);
+
+    HitInfo infoShadow;
+    float factShadow = 1.0;
+    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//TODO ponerle tambie la t min y la t max
+        factShadow = 0.0;
+        //return material->ambient * this->ambGlobal;
+    }
 
     ambient = material->ambient * llums[0]->ambient; //only Ka * Ia
-    difus = material->diffuse * llums[0]->difus * glm::max(glm::dot(L , normal),0.0f) ; //only Ks * Id * L * N
-    especular =(material->specular * llums[0]->especular) * glm::max(glm::pow(NH,material->shininess),0.0f);
+    difus = material->diffuse * llums[0]->difus * glm::max(glm::dot(L , normal),0.0f); //only Ks * Id * L * N
+    especular =(material->specular * llums[0]->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
 
-    color = ambient + difus + especular;
+    color = ambient + factShadow * (difus +  especular);
     return color;
+}
+
+bool Scene::hitShadow(Ray *raig,float t_min, float t_max, HitInfo& info){
+    for(Object *ob: objects)
+    {
+        if (ob->hit(*raig,0,info.t,info))//si intersecta
+        {
+            return true;
+        }
+
+    }
+
 }
 

@@ -62,9 +62,18 @@ void Render()
             float u = float(x) / float(scene->cam->viewportX);
             float v = float(y) / float(scene->cam->viewportY);
 
-            Ray r = scene->cam->getRay(u, v);//cal el rayo
+            /*
+            for(int i  = 0; i <= 10; i++)
+            {
+                Ray r = scene->cam->getRay(u, v);//cal el rayo
 
+            }
+            */
+            Ray r = scene->cam->getRay(u, v);//cal el rayo
             col += scene->ComputeColor(r,0);
+
+
+
 #ifdef GLUT
             float pixelX =  2*((x+0.5f)/scene->cam->viewportX)-1;
             float pixelY = 2*((y+0.5f)/scene->cam->viewportY)-1;
