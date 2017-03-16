@@ -158,7 +158,6 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
     if(this->hit(ray,0,info.t,info))
     {
 
-        //aqyi llamar a blinnPhong()
         //color = vec3(info.normal.x,info.normal.y,info.normal.z);
         //color = vec3(1,0,0);
 
@@ -186,18 +185,18 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
     normal = glm::normalize(normal);
 
     vec3 L = glm::normalize(llums[0]->pos - point);
-    vec3 V = glm::normalize(vec3(0, 0, 0) - point);//TODO mirarlo
+    vec3 V = point - vec3(0, 0, 0)  ;//TODO mirarlo
     vec3 H = glm::normalize((L + V));
     float NH = glm::dot(normal,H);
 
-    //Aqui lanzamos otroel rayoSombra
+    //lanzamos el rayoSombra
     float ep = 0.01;
     vec3 pointRay = point + (ep * L);
     Ray *rShadow =  new Ray(pointRay, L);
 
     HitInfo infoShadow;
     float factShadow = 1.0;
-    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//if intersect with object, we apply a attenuation coefficient
+    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//if intersect with object, it is in the shadow
         factShadow = 0.0;
     }
 
@@ -220,7 +219,7 @@ bool Scene::hitShadow(Ray *raig,float t_min, float t_max, HitInfo& info){
 float Scene::getAtenuacion4Point(vec3 posLight, vec3 point)
 {
     float atenuacion;
-    vec3 d = glm::normalize(posLight - point);
+    vec3 d = posLight - point;
 
     atenuacion = 1 /(0.5 + ( 0.01 * glm::dot(d,d)));
 
