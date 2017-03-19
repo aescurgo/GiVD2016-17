@@ -185,7 +185,7 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
     normal = glm::normalize(normal);
 
     vec3 L = glm::normalize(llums[0]->pos - point);
-    vec3 V = point - vec3(0, 0, 0)  ;//TODO mirarlo
+    vec3 V = glm::normalize(vec3(13, 2, 3)- point);
     vec3 H = glm::normalize((L + V));
     float NH = glm::dot(normal,H);
 

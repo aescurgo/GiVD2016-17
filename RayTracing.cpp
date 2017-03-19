@@ -59,18 +59,32 @@ void Render()
          for (int x = 0; x < scene->cam->viewportX; x++) {
 
             vec3 col(0, 0, 0);
-            float u = float(x) / float(scene->cam->viewportX);
-            float v = float(y) / float(scene->cam->viewportY);
+            //float u = float(x) / float(scene->cam->viewportX);
+            //float v = float(y) / float(scene->cam->viewportY);
 
-            /*
+            vec3 colorByPixel(0,0,0);
+
             for(int i  = 0; i <= 10; i++)
             {
-                Ray r = scene->cam->getRay(u, v);//cal el rayo
+                float ra = drand48();
+                float u = float(x+ra) / float(scene->cam->viewportX);
+                float v = float(y+ra) / float(scene->cam->viewportY);
 
+
+
+                Ray r = scene->cam->getRay(u, v);//cal el rayo
+                colorByPixel += scene->ComputeColor(r,0);
             }
-            */
-            Ray r = scene->cam->getRay(u, v);//cal el rayo
-            col += scene->ComputeColor(r,0);
+
+            colorByPixel = colorByPixel / 10.0f;
+
+            col += colorByPixel;
+
+
+
+            //Ray r = scene->cam->getRay(u, v);//cal el rayo
+            //col += scene->ComputeColor(r,0);
+
 
 
 
