@@ -1,7 +1,9 @@
 #include "Scene.h"
 
+const int MAXDEPTH = 10;
 Scene::Scene()
 {
+
     // creacio de la camera
     vec3 lookfrom(13, 2, 3);
     //vec3 lookfrom(5, 5, 1); //zoom
@@ -141,6 +143,8 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 vec3 Scene::ComputeColor (Ray &ray, int depth ) {
 
     vec3 color;
+    vec3 colorReflejo;
+
     //si intersecta con objeto caculo el color
     //si no pongo el backgraound
     //llamaraemos a : testinterseccio  --> hit
@@ -157,7 +161,6 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
     HitInfo info;//no tocar (es el principal)
     if(this->hit(ray,0,info.t,info))
     {
-
         //color = vec3(info.normal.x,info.normal.y,info.normal.z);
         //color = vec3(1,0,0);
 
@@ -165,6 +168,18 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
         //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
 
         color = (info.mat_ptr->ambient * this->ambGlobal) + blinnPhong(info.p,info.normal,info.mat_ptr,true);
+
+        //lanzar rayo reflectit
+
+        Ray scattered;
+
+        if (info.mat_ptr->scatter(ray,info,color, scattered))
+        {
+            if(MAXDEPTH != depth )
+                colorReflejo += ComputeColor(scattered,depth + 1);
+
+        }
+        color = color+ colorReflejo;
 
 
     }
