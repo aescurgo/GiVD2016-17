@@ -14,6 +14,7 @@
 #include "Cube.h"
 #include "Light.h"
 #include "Puntuallight.h"
+#include "Metall.h"
 
 class Scene: public Hitable
 {

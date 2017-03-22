@@ -72,7 +72,7 @@ void Scene::RandomScene() {
     //phase 2
     objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
-
+    objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
 }
 
 /*
@@ -81,6 +81,7 @@ void Scene::RandomScene() {
 void Scene::addLight()
 {
     llums.push_back(new PuntualLight(vec3(2,8,10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));
+    //llums.push_back(new PuntualLight(vec3(2,8,-10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));
 
 }
 
@@ -167,19 +168,26 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
         //applying gamma correction
         //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
 
-        color = (info.mat_ptr->ambient * this->ambGlobal) + blinnPhong(info.p,info.normal,info.mat_ptr,true);
-
-        //lanzar rayo reflectit
+        vec3 ambienteGlobal = info.mat_ptr->ambient * this->ambGlobal;
 
         Ray scattered;
 
         if (info.mat_ptr->scatter(ray,info,color, scattered))
         {
-            if(MAXDEPTH != depth )
+            if(MAXDEPTH >= depth )
+                //cout <<  depth << endl;
                 colorReflejo += ComputeColor(scattered,depth + 1);
 
         }
-        color = color+ colorReflejo;
+
+        color = ambienteGlobal + blinnPhong(info.p,info.normal,info.mat_ptr,true) + (colorReflejo  * info.mat_ptr->diffuse);
+
+
+
+        //lanzar rayo reflectit
+
+
+
 
 
     }
@@ -197,30 +205,36 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
 {
     vec3 color, ambient,difus, especular,posLight;
 
-    normal = glm::normalize(normal);
+    //for each light we calculate the blinn-phong & shadows
+    for(Light *l : llums)
+    {
+        normal = glm::normalize(normal);
 
-    vec3 L = glm::normalize(llums[0]->pos - point);
-    vec3 V = glm::normalize(vec3(13, 2, 3)- point);
-    vec3 H = glm::normalize((L + V));
-    float NH = glm::dot(normal,H);
+        vec3 L = glm::normalize(l->pos - point);
+        vec3 V = glm::normalize(vec3(13, 2, 3)- point);
+        vec3 H = glm::normalize((L + V));
+        float NH = glm::dot(normal,H);
 
-    //lanzamos el rayoSombra
-    float ep = 0.01;
-    vec3 pointRay = point + (ep * L);
-    Ray *rShadow =  new Ray(pointRay, L);
+        //lanzamos el rayoSombra
+        float ep = 0.01;
+        vec3 pointRay = point + (ep * L);
+        Ray *rShadow =  new Ray(pointRay, L);
 
-    HitInfo infoShadow;
-    float factShadow = 1.0;
-    if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//if intersect with object, it is in the shadow
-        factShadow = 0.0;
+        HitInfo infoShadow;
+        float factShadow = 1.0;
+        if(hitShadow(rShadow,0,infoShadow.t, infoShadow)){//if intersect with object, it is in the shadow
+            factShadow = 0.0;
+        }
+
+        ambient = material->ambient * l->ambient; //only Ka * Ia
+        difus = material->diffuse * l->difus * glm::max(glm::dot(L , normal),0.0f); //only Ks * Id * L * N
+        especular =(material->specular * l->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
+
+        float atenuacion = getAtenuacion4Point(l->pos, point);
+        color = color + (ambient + atenuacion * (factShadow * (difus +  especular)));
+
+
     }
-
-    ambient = material->ambient * llums[0]->ambient; //only Ka * Ia
-    difus = material->diffuse * llums[0]->difus * glm::max(glm::dot(L , normal),0.0f); //only Ks * Id * L * N
-    especular =(material->specular * llums[0]->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
-
-    float atenuacion = getAtenuacion4Point(llums[0]->pos, point);
-    color = ambient + atenuacion * (factShadow * (difus +  especular));
     return color;
 }
 

@@ -25,7 +25,7 @@ SOURCES += \
     Cube.cpp \
     Light.cpp \
     Puntuallight.cpp \
-    Metal.cpp
+    Metall.cpp
 
 
 include(deployment.pri)
@@ -171,4 +171,4 @@ HEADERS += \
     Cube.h \
     Light.h \
     Puntuallight.h \
-    Metal.h
+    Metall.h
