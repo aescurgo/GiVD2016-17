@@ -16,10 +16,9 @@ Scene::Scene()
     int pixelsY = 200;*/
     cam = new Camera(lookfrom, lookat, vec3(0,1,0), 20, pixelsX, pixelsY, aperture, dist_to_focus);
 
-   // TODO: Cal crear els objectes de l'escena
+   // TODO: Crear mas escenas de muestra
     RandomScene();
 
-    // TODO: Cal afegir llums a l'escena (Fase 2)
     addLight();
     
     setAmbientGlobal(vec3(0.01,0.01,0.01));
@@ -62,17 +61,26 @@ void Scene::RandomScene() {
     //objects.push_back(new Sphere(vec3(1,-1,-1), 0.5, new Lambertian(vec3(0.8, 0.6, 0.2))));
     //objects.push_back(new Sphere(vec3(-1,-1,-1), 0.5, new Lambertian(vec3(0.6, 0.8, 0.2),vec3(0.8, 0.1, 0.0),vec3(0.0,1.0,1.0),5.0)));
     //objects.push_back(new Sphere(vec3(-1,0,-1), -0.45, new Lambertian(vec3(0.2, 0.6, 0.8),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Plane(vec3(1,0,0),vec3(1,1,1), new Lambertian(vec3(0.1, 0.2, 0.5),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Plane(vec3(1,0,0),vec3(1,1,1), new Lambertian(vec3(0.2, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new Plane(vec3(0,0,1),vec3(1,1,1), new Lambertian(vec3(0.8, 0.6, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.6, 0.8, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.2, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Cube(vec3(1,1,1),vec3(-1,-1,-1), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Cube(vec3(1,1,1),vec3(-0.5,-0.5,-0.5), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
     //phase 2
-    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Sphere(vec3(0,0,1), 0.5, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
+    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
+
+
+
+
+
+
+    //profundidad,altura,der o iz
 }
 
 /*
@@ -105,9 +113,17 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
     {
         if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
-            if (info.t < infoTemp.t) info = info ;//coprobamos si la t de info es más pequeña
+            if (info.t < infoTemp.t)
+            {
+                info = info ;//coprobamos si la t de info es más pequeña
+                t_min= info.t;
+            }
             //que la infoTemp del objeto que estamos mirando
-            else info =infoTemp;
+            else
+            {
+                info =infoTemp;
+                t_min = info.t;
+            }
 
             inter = true;
         }
@@ -141,7 +157,7 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 */
 
 
-vec3 Scene::ComputeColor (Ray &ray, int depth ) {
+vec3 Scene::ComputeColor (Ray &ray, int depth) {
 
     vec3 color;
     vec3 colorReflejo;
@@ -171,21 +187,19 @@ vec3 Scene::ComputeColor (Ray &ray, int depth ) {
         vec3 ambienteGlobal = info.mat_ptr->ambient * this->ambGlobal;
 
         Ray scattered;
+        vec3 K;
 
-        if (info.mat_ptr->scatter(ray,info,color, scattered))
+        if(MAXDEPTH >= depth )
         {
-            if(MAXDEPTH >= depth )
-                //cout <<  depth << endl;
-                colorReflejo += ComputeColor(scattered,depth + 1);
+            if (info.mat_ptr->scatter(ray,info,K, scattered))
+
+                //colorReflejo+=  blinnPhong(info.p,info.normal,info.mat_ptr,true);
+                //colorReflejo+= ComputeColor(scattered,depth + 1);
+                color = blinnPhong(info.p,info.normal,info.mat_ptr,true) + ComputeColor(scattered,depth + 1) *K;
+
 
         }
-
-        color = ambienteGlobal + blinnPhong(info.p,info.normal,info.mat_ptr,true) + (colorReflejo  * info.mat_ptr->diffuse);
-
-
-
-        //lanzar rayo reflectit
-
+        //color = ambienteGlobal + blinnPhong(info.p,info.normal,info.mat_ptr,true) + (K * colorReflejo);
 
 
 
