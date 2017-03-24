@@ -16,14 +16,21 @@ Metall::~Metall()
 
 bool Metall::scatter(const Ray& r_in, const HitInfo& rec, vec3& color, Ray& scattered) const
 {
-    //vec3 target = rec.p + rec.normal + this->RandomInSphere();
-    vec3 distance = r_in.origin + rec.p;
-    vec3 target = distance- (2.0f * (distance * rec.normal) )* rec.normal;
+
+    //vec3 r = r_in.direction + (2 * glm::dot(r_in.direction ,rec.normal) ) * rec.normal;
+    vec3 r = r_in.direction + (2.0f * (r_in.direction * rec.normal) ) * rec.normal;
 
     float ep = 0.01;
+    float fuzzy = 0;
+
+
+    vec3 target = r + fuzzy * this->RandomInSphere();
+
     vec3 p0 = rec.p + (ep * target);//to solve surface acne.. mod the point
 
-    scattered = Ray(p0, target-p0);
+    scattered = Ray(p0, target);
+
     color = this->specular;
+
     return true;
 }
