@@ -17,11 +17,10 @@ Metall::~Metall()
 bool Metall::scatter(const Ray& r_in, const HitInfo& rec, vec3& color, Ray& scattered) const
 {
 
-    //vec3 r = r_in.direction + (2 * glm::dot(r_in.direction ,rec.normal) ) * rec.normal;
-    vec3 r = r_in.direction + (2.0f * (r_in.direction * rec.normal) ) * rec.normal;
+    vec3 r = r_in.direction - (2 * glm::dot(r_in.direction ,rec.normal) ) * rec.normal;
 
     float ep = 0.01;
-    float fuzzy = 0;
+    float fuzzy = 0.2;
 
 
     vec3 target = r + fuzzy * this->RandomInSphere();

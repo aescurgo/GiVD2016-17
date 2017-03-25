@@ -51,6 +51,7 @@ public:
 
 private:
     void RandomScene();
+    void sceneOne();
     void addLight();
     void setAmbientGlobal(vec3 ambient);
     float getAtenuacion4Point(vec3 postLight, vec3 point);

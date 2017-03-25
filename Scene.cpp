@@ -16,8 +16,10 @@ Scene::Scene()
     int pixelsY = 200;*/
     cam = new Camera(lookfrom, lookat, vec3(0,1,0), 20, pixelsX, pixelsY, aperture, dist_to_focus);
 
-   // TODO: Crear mas escenas de muestra
+    //Escenas de muestra
     RandomScene();
+
+    //sceneOne();//habitacion + esferas + cubo
 
     addLight();
     
@@ -49,6 +51,14 @@ void Scene::setAmbientGlobal(vec3 ambient){
     this->ambGlobal = ambient;
 }
 
+void Scene::sceneOne(){
+    objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
+    //objects.push_back(new Plane(vec3(1,0,0),vec3(-1,-15,-15), new Lambertian(vec3(0.4, 0.4, 0.4),vec3(0.4, 0.4, 0.4),vec3(0.4,0.4,0.4),10.0)));
+    objects.push_back(new Plane(vec3(0,1,0),vec3(-15,-1,-15), new Lambertian(vec3(0.2, 0.2, 0.2),vec3(0.2, 0.2, 0.2),vec3(0.2,0.2,0.2),10.0)));
+    objects.push_back(new Plane(vec3(0,0,1),vec3(-15,-15,-1), new Lambertian(vec3(0.6, 0.6, 0.6),vec3(0.6, 0.6, 0.6),vec3(0.6,0.6,0.6),10.0)));
+
+}
+
 // TODO: Metode que genera una escena random de numObjects de tipus esfera, a diferents posicions,
 // amb diferents radis i diferents materials. S'usa drand48 per generar numeros random
 
@@ -69,18 +79,13 @@ void Scene::RandomScene() {
     //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
     //phase 2
-
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Sphere(vec3(0,0,1), 0.5, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
+    //objects.push_back(new Sphere(vec3(0,0,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
     objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
 
-
-
-
-
-
     //profundidad,altura,der o iz
+
 }
 
 /*
@@ -184,7 +189,9 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
         //applying gamma correction
         //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
 
-        vec3 ambienteGlobal = info.mat_ptr->ambient * this->ambGlobal;
+        //only blinn-phong
+        color = blinnPhong(info.p,info.normal,info.mat_ptr,true);
+
 
         Ray scattered;
         vec3 K;
@@ -207,9 +214,9 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
     }
     else
     {
-        float colorY = (ray.direction.y+1) * 0.5;//obtemos el valor de Y entre un rango de 0 y 1
-        color = ((1-colorY)*vec3(1.0,1.0,1.0)) + (colorY*vec3(0.5,0.7,1.0));//aqui vamos mostrando o blanco o azul dependiendo del valor de Y
-
+        //float colorY = (ray.direction.y+1) * 0.5;//obtemos el valor de Y entre un rango de 0 y 1
+        //color = ((1-colorY)*vec3(1.0,1.0,1.0)) + (colorY*vec3(0.5,0.7,1.0));//aqui vamos mostrando o blanco o azul dependiendo del valor de Y
+        color = vec3(0.5,0.7,1);//aplicamos solo un color de fondo... ya que con el degradado salia un efecto raro
     }
 
      return color;
@@ -217,14 +224,16 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
 
 vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombra)
 {
-    vec3 color, ambient,difus, especular,posLight;
+    vec3 color, ambient,difus, especular,posLight,ambienteGlobal;
 
     //for each light we calculate the blinn-phong & shadows
     for(Light *l : llums)
     {
-        normal = glm::normalize(normal);
+        ambienteGlobal = material->ambient * this->ambGlobal;//calculamos el ambiente global -> materialAmbiente * por la ambiente Global definida por la escena
 
-        vec3 L = glm::normalize(l->pos - point);
+        //normalizamos todos los vectores necesarios para blinn
+        normal = glm::normalize(normal);
+        vec3 L = glm::normalize(l->pos - point);//vec Luz
         vec3 V = glm::normalize(vec3(13, 2, 3)- point);
         vec3 H = glm::normalize((L + V));
         float NH = glm::dot(normal,H);
@@ -245,7 +254,7 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
         especular =(material->specular * l->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
 
         float atenuacion = getAtenuacion4Point(l->pos, point);
-        color = color + (ambient + atenuacion * (factShadow * (difus +  especular)));
+        color = ambienteGlobal + color + (ambient + atenuacion * (factShadow * (difus +  especular)));
 
 
     }
