@@ -36,7 +36,7 @@ Features
     - [Alvaro] Basic Blinn-Phong
     - [Alvaro] Recursive Blinn-Phong
 - Material
-    - [Alvaro] Metal
+    - [Alvaro - Enrique] Metal
     - [-] Transparent
     - [-] Isotropic
     - [-] Volume
@@ -47,8 +47,18 @@ Extensions
 
 Screenshots
 ^^^^^^^^^^^
+Escena: Principal
+.. image:: escena_practica.png
+
+Escena: 2 planos y esfera
+.. image:: escena_practica.png
+
+Escena: habitación con dos esferas y un cubo
 .. image:: scene_room_2spheres_cube.png
-   :target: Escena habitacion con esferas y cubo
+
+Escena: Random esferas, con diferentes materiales y 2 luces
+.. image:: escena_3_esferas.png
+
 
 
 Additional Information
