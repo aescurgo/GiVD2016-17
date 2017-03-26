@@ -6,7 +6,7 @@ Scene::Scene()
 
     // creacio de la camera
     vec3 lookfrom(13, 2, 3);
-    //vec3 lookfrom(5, 5, 1); //zoom
+    //vec3 lookfrom(20, 5, 15); // LOOKFROM 2
     vec3 lookat(0,0,0);
     float dist_to_focus = 10.0;
     float aperture = 0.1;
@@ -18,8 +18,9 @@ Scene::Scene()
 
     //Escenas de muestra
     RandomScene();
-
-    //sceneOne();//habitacion + esferas + cubo
+    //sceneOne();//2 planos + esfera NOTA: NOTA: habilitar lookfrom o lookfrom 2
+    //sceneTwo();//habitacion + esferas + cubo  NOTA: habilitar lookfrom 2
+    //sceneThree();//esferas + 2 luces puntuales
 
     addLight();
     
@@ -59,6 +60,27 @@ void Scene::sceneOne(){
 
 }
 
+void Scene::sceneTwo(){
+    objects.push_back(new Sphere(vec3(5,2,7.5), 1, new Lambertian(vec3(0.0,0.05,0.05),vec3(0.4, 0.5, 0.5),vec3(0.04,0.7,0.7),10.078125)));
+    objects.push_back(new Sphere(vec3(6,2,1.5), 1, new Metall(vec3(0.24725,0.1995, 0.0745),vec3(0.75164 , 0.60648, 0.22648),vec3( 0.628281,0.555802 , 0.366065),0.4)));
+    objects.push_back(new Cube(vec3(2,2,2),vec3(0.5,0.5,0.5), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    objects.push_back(new Plane(vec3(1,0,0),vec3(-0,-1,-1), new Metall(vec3(0.4, 0.4, 0.4),vec3(0.4, 0.4, 0.4),vec3(0.4,0.4,0.4),10.0)));
+    objects.push_back(new Plane(vec3(0,1,0),vec3(-1,-0,-1), new Metall(vec3(0.2, 0.2, 0.2),vec3(0.2, 0.2, 0.2),vec3(0.2,0.2,0.2),10.0)));
+    objects.push_back(new Plane(vec3(0,0,1),vec3(-1,-1,-0), new Metall(vec3(0.6, 0.6, 0.6),vec3(0.6, 0.6, 0.6),vec3(0.6,0.6,0.6),10.0)));
+}
+
+void Scene::sceneThree(){
+    objects.push_back(new Sphere(vec3(0,0,-3), 0.3,new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
+    objects.push_back(new Sphere(vec3(0,0,3), 0.3,new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
+    objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.0,0.0,0.0),vec3(0.5, 0.0, 0.0),vec3(0.7,0.6,0.6),.25)));
+    objects.push_back(new Sphere(vec3(2,0,1), 0.6, new Lambertian(vec3(0.0,0.0,0.0),vec3(0.5, 0.0, 0.0),vec3(0.7,0.6,0.6),.25)));
+    objects.push_back(new Sphere(vec3(-3,0,2), 0.2,new Metall(vec3(0.0215,0.1745,0.0215),vec3(0.07568, 0.61424, 0.07568),vec3(0.633,0.727811,0.633),0.6))); // esmeralda
+
+    objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.1,0.18725, 0.1745),vec3(0.396, 0.74151, 0.69102),vec3( 0.297254, 0.30829, 0.306678),0.1)));
+    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Metall(vec3(0.19225,0.19225,0.19225),vec3(0.50754, 0.50754, 0.50754),vec3(0.508273,0.508273,0.508273),0.4))); // silver
+
+}
+
 // TODO: Metode que genera una escena random de numObjects de tipus esfera, a diferents posicions,
 // amb diferents radis i diferents materials. S'usa drand48 per generar numeros random
 
@@ -75,14 +97,14 @@ void Scene::RandomScene() {
     //objects.push_back(new Plane(vec3(0,0,1),vec3(1,1,1), new Lambertian(vec3(0.8, 0.6, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.2, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Cube(vec3(1,1,1),vec3(-0.5,-0.5,-0.5), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+
     //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
 
     //phase 2
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
-    //objects.push_back(new Sphere(vec3(0,0,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
-    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
+    objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+
 
     //profundidad,altura,der o iz
 
@@ -93,8 +115,9 @@ void Scene::RandomScene() {
  */
 void Scene::addLight()
 {
-    llums.push_back(new PuntualLight(vec3(2,8,10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));
-    //llums.push_back(new PuntualLight(vec3(2,8,-10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));
+    llums.push_back(new PuntualLight(vec3(2,8,10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));//izq
+    //llums.push_back(new PuntualLight(vec3(2,8,-10),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));//der
+    //llums.push_back(new PuntualLight(vec3(20,5,18),vec3(0.4,0.4,0.4),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0)));//pos obs
 
 }
 
@@ -190,7 +213,7 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
         //color = vec3(glm::sqrt(info.mat_ptr->diffuse.x),glm::sqrt(info.mat_ptr->diffuse.y),glm::sqrt(info.mat_ptr->diffuse.z));
 
         //only blinn-phong
-        color = blinnPhong(info.p,info.normal,info.mat_ptr,true);
+        //color = blinnPhong(info.p,info.normal,info.mat_ptr,true);
 
 
         Ray scattered;
@@ -206,7 +229,7 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
 
 
         }
-        //color = ambienteGlobal + blinnPhong(info.p,info.normal,info.mat_ptr,true) + (K * colorReflejo);
+        //color = blinnPhong(info.p,info.normal,info.mat_ptr,true) + (K * colorReflejo);
 
 
 

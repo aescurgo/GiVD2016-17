@@ -19,7 +19,7 @@ bool Plane::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
     if (glm::abs(nd) == 0.001) return false; //is in parallel with the ray.
     if (glm::abs(nd) > 0.001)
     {
-        if (t >= 0.001)
+        if (t >= 0.0)
         {
             rec.t = t;
             rec.p = r.pointAtParameter(rec.t);
