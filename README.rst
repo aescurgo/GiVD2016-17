@@ -47,7 +47,9 @@ Extensions
 
 Screenshots
 ^^^^^^^^^^^
-[Se subira el repositorio]
+.. image:: scene_room_2spheres_cube.png
+   :target: Escena habitacion con esferas y cubo
+
 
 Additional Information
 ^^^^^^^^^^^^^^^^^^^^^^
