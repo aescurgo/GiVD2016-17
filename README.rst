@@ -51,7 +51,7 @@ Escena: Principal
 .. image:: escena_practica.png
 
 Escena: 2 planos y esfera
-.. image:: escena_practica.png
+.. image:: escena_dosPlanos_esfera.png
 
 Escena: habitación con dos esferas y un cubo
 .. image:: scene_room_2spheres_cube.png
