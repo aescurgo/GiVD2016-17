@@ -1,4 +1,5 @@
 #include "BoundaryObject.h"
+#include "Triangle.h"
 
 BoundaryObject::BoundaryObject(string s, Material *m) : Object(m)
 { 
@@ -8,8 +9,8 @@ BoundaryObject::BoundaryObject(string s, Material *m) : Object(m)
   // Cal recorrer l'estructura de l'objecte segons cara-vertexs que es carrega
 
 
-  vertexs.clear();
-  cares.clear();
+  //vertexs.clear();
+  //cares.clear();
 }
 
 BoundaryObject::~BoundaryObject() {
@@ -18,8 +19,20 @@ BoundaryObject::~BoundaryObject() {
 
 bool BoundaryObject::hit(const Ray& r, float t_min, float t_max, HitInfo& rec) const {
 
+    bool tr=false;
     // TO DO: A implementar en la Fase 1
-    return false;
+    for(int i=0;i<sizeof(this->vertexs);i+=3)
+    {
+        glm::vec3 v1(this->vertexs[i]);
+        glm::vec3 v2(this->vertexs[i+1]);
+        glm::vec3 v3(this->vertexs[i+2]);
+
+        Triangle *ts =new Triangle(v1,v2,v3, new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0));
+        tr=ts->hit(r,t_min,t_max,rec);
+        return tr;
+    }
+
+
 }
 
 // Llegeix un fitxer .obj
