@@ -63,6 +63,10 @@ Escena: Random esferas, con diferentes materiales y 2 luces
 
 .. image:: escena_3_esferas.png
 
+Escena: Triangulo
+
+.. image:: triangulo.png
+
 
 
 Additional Information

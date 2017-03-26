@@ -21,6 +21,7 @@ Scene::Scene()
     //sceneOne();//2 planos + esfera NOTA: NOTA: habilitar lookfrom o lookfrom 2
     //sceneTwo();//habitacion + esferas + cubo  NOTA: habilitar lookfrom 2
     //sceneThree();//esferas + 2 luces puntuales
+    //sceneFour();//triangulo
 
     addLight();
     
@@ -70,6 +71,7 @@ void Scene::sceneTwo(){
 }
 
 void Scene::sceneThree(){
+
     objects.push_back(new Sphere(vec3(0,0,-3), 0.3,new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(0,0,3), 0.3,new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.0,0.0,0.0),vec3(0.5, 0.0, 0.0),vec3(0.7,0.6,0.6),.25)));
@@ -79,6 +81,10 @@ void Scene::sceneThree(){
     objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.1,0.18725, 0.1745),vec3(0.396, 0.74151, 0.69102),vec3( 0.297254, 0.30829, 0.306678),0.1)));
     objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Metall(vec3(0.19225,0.19225,0.19225),vec3(0.50754, 0.50754, 0.50754),vec3(0.508273,0.508273,0.508273),0.4))); // silver
 
+}
+
+void Scene::sceneFour(){
+    objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
 }
 
 // TODO: Metode que genera una escena random de numObjects de tipus esfera, a diferents posicions,
@@ -223,16 +229,10 @@ vec3 Scene::ComputeColor (Ray &ray, int depth) {
         {
             if (info.mat_ptr->scatter(ray,info,K, scattered))
 
-                //colorReflejo+=  blinnPhong(info.p,info.normal,info.mat_ptr,true);
-                //colorReflejo+= ComputeColor(scattered,depth + 1);
                 color = blinnPhong(info.p,info.normal,info.mat_ptr,true) + ComputeColor(scattered,depth + 1) *K;
 
 
         }
-        //color = blinnPhong(info.p,info.normal,info.mat_ptr,true) + (K * colorReflejo);
-
-
-
 
     }
     else
@@ -273,8 +273,8 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
         }
 
         ambient = material->ambient * l->ambient; //only Ka * Ia
-        difus = material->diffuse * l->difus * glm::max(glm::dot(L , normal),0.0f); //only Ks * Id * L * N
-        especular =(material->specular * l->especular) * glm::pow(glm::max(NH,0.0f),material->shininess);
+        difus = material->diffuse * l->difus * glm::max(glm::dot(L , normal),0.0f); //only Kd * Id * L * N
+        especular =(material->specular * l->especular) * glm::pow(glm::max(NH,0.0f),material->shininess); //only Ks
 
         float atenuacion = getAtenuacion4Point(l->pos, point);
         color = ambienteGlobal + color + (ambient + atenuacion * (factShadow * (difus +  especular)));
