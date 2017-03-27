@@ -5,8 +5,8 @@ Scene::Scene()
 {
 
     // creacio de la camera
-    vec3 lookfrom(13, 2, 3);
-    //vec3 lookfrom(20, 5, 15); // LOOKFROM 2
+    //vec3 lookfrom(13, 2, 3);
+    vec3 lookfrom(20, 5, 15); // LOOKFROM 2
     vec3 lookat(0,0,0);
     float dist_to_focus = 10.0;
     float aperture = 0.1;
@@ -17,11 +17,11 @@ Scene::Scene()
     cam = new Camera(lookfrom, lookat, vec3(0,1,0), 20, pixelsX, pixelsY, aperture, dist_to_focus);
 
     //Escenas de muestra
-    RandomScene();
+    //RandomScene();
     //sceneOne();//2 planos + esfera NOTA: NOTA: habilitar lookfrom o lookfrom 2
     //sceneTwo();//habitacion + esferas + cubo  NOTA: habilitar lookfrom 2
     //sceneThree();//esferas + 2 luces puntuales
-    //sceneFour();//triangulo
+    sceneFour();//triangulo
 
     addLight();
     
@@ -84,7 +84,9 @@ void Scene::sceneThree(){
 }
 
 void Scene::sceneFour(){
-    objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+
+    objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-2,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
+    //objects.push_back(new Triangle(vec3(-1, -1, -5),vec3( 1, -1, -5),vec3(0, 1, -5), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
 }
 
 // TODO: Metode que genera una escena random de numObjects de tipus esfera, a diferents posicions,
@@ -104,13 +106,13 @@ void Scene::RandomScene() {
     //objects.push_back(new Plane(vec3(0,1,0),vec3(1,1,1), new Lambertian(vec3(0.2, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
     //objects.push_back(new Triangle(vec3(-1,-1,0),vec3(1,-1,0),vec3(0,1,0), new Lambertian(vec3(0.8, 0.2, 0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
 
-    //objects.push_back(new BoundaryObject("../RayTracing201617/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8))));
+    //objects.push_back(new BoundaryObject("../F_05/resources/peo1K.obj", new Lambertian(vec3(0.2, 0.6, 0.8),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
 
     //phase 2
+
     objects.push_back(new Sphere(vec3(0,0,-1), 0.5, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.5, 0.5, 0.5),vec3(1.0,1.0,1.0),10.0)));
     objects.push_back(new Sphere(vec3(-3,1,1), 1, new Metall(vec3(0.2,0.2, 0.2),vec3(0.7, 0.6, 0.5),vec3( 0.7, 0.7, 0.7),10.0)));
     objects.push_back(new Sphere(vec3(0,-100.5,-1), 100, new Lambertian(vec3(0.2,0.2,0.2),vec3(0.8, 0.8, 0.0),vec3(1.0,1.0,1.0),10.0)));
-
 
     //profundidad,altura,der o iz
 
@@ -143,9 +145,10 @@ bool Scene::hit(const Ray& raig, float t_min, float t_max, HitInfo& info) const 
 
     HitInfo infoTemp;
     bool inter = false;
-    for(Object *o: objects)
+    //for(Object *o: objects)
+    for (int i=0; i<objects.size(); i++)
     {
-        if (o->hit(raig,t_min,t_max,infoTemp))//si intersecta
+        if (objects[i]->hit(raig,t_min,t_max,infoTemp))//si intersecta
         {
             if (info.t < infoTemp.t)
             {
@@ -250,13 +253,14 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
     vec3 color, ambient,difus, especular,posLight,ambienteGlobal;
 
     //for each light we calculate the blinn-phong & shadows
-    for(Light *l : llums)
+    //for(Light *l : llums)
+    for (int i=0; i<llums.size(); i++)
     {
         ambienteGlobal = material->ambient * this->ambGlobal;//calculamos el ambiente global -> materialAmbiente * por la ambiente Global definida por la escena
 
         //normalizamos todos los vectores necesarios para blinn
         normal = glm::normalize(normal);
-        vec3 L = glm::normalize(l->pos - point);//vec Luz
+        vec3 L = glm::normalize(llums[i]->pos - point);//vec Luz
         vec3 V = glm::normalize(vec3(13, 2, 3)- point);
         vec3 H = glm::normalize((L + V));
         float NH = glm::dot(normal,H);
@@ -272,11 +276,11 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
             factShadow = 0.0;
         }
 
-        ambient = material->ambient * l->ambient; //only Ka * Ia
-        difus = material->diffuse * l->difus * glm::max(glm::dot(L , normal),0.0f); //only Kd * Id * L * N
-        especular =(material->specular * l->especular) * glm::pow(glm::max(NH,0.0f),material->shininess); //only Ks
+        ambient = material->ambient * llums[i]->ambient; //only Ka * Ia
+        difus = material->diffuse * llums[i]->difus * glm::max(glm::dot(L , normal),0.0f); //only Kd * Id * L * N
+        especular =(material->specular * llums[i]->especular) * glm::pow(glm::max(NH,0.0f),material->shininess); //only Ks
 
-        float atenuacion = getAtenuacion4Point(l->pos, point);
+        float atenuacion = getAtenuacion4Point(llums[i]->pos, point);
         color = ambienteGlobal + color + (ambient + atenuacion * (factShadow * (difus +  especular)));
 
 
@@ -285,9 +289,10 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
 }
 
 bool Scene::hitShadow(Ray *raig,float t_min, float t_max, HitInfo& info){
-    for(Object *ob: objects)
+    //for(Object *ob: objects)
+    for (int i=0; i<objects.size(); i++)
     {
-        if (ob->hit(*raig,0,info.t,info))return true;
+        if (objects[i]->hit(*raig,0,info.t,info))return true;
     }
 }
 
