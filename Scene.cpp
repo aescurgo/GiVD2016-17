@@ -5,8 +5,8 @@ Scene::Scene()
 {
 
     // creacio de la camera
-    //vec3 lookfrom(13, 2, 3);
-    vec3 lookfrom(20, 5, 15); // LOOKFROM 2
+    vec3 lookfrom(13, 2, 3);
+    //vec3 lookfrom(20, 5, 15); // LOOKFROM 2
     vec3 lookat(0,0,0);
     float dist_to_focus = 10.0;
     float aperture = 0.1;
@@ -17,11 +17,11 @@ Scene::Scene()
     cam = new Camera(lookfrom, lookat, vec3(0,1,0), 20, pixelsX, pixelsY, aperture, dist_to_focus);
 
     //Escenas de muestra
-    //RandomScene();
+    RandomScene();
     //sceneOne();//2 planos + esfera NOTA: NOTA: habilitar lookfrom o lookfrom 2
     //sceneTwo();//habitacion + esferas + cubo  NOTA: habilitar lookfrom 2
     //sceneThree();//esferas + 2 luces puntuales
-    sceneFour();//triangulo
+    //sceneFour();//triangulo NOTA: habilitar lookfrom 2 para mejor visualizacion
 
     addLight();
     
@@ -41,10 +41,19 @@ Scene::~Scene()
                     delete (Plane *)(objects[i]);
             if (dynamic_cast<Triangle*>(objects[i]))
                     delete (Triangle *)(objects[i]);
+            if (dynamic_cast<Cube*>(objects[i]))
+                    delete (Cube *)(objects[i]);
         }
     }
 
-    //TODO delete all lights
+    //delete all lights
+    for(unsigned int i = 0; i < llums.size(); ++i){
+        if(llums[i]){
+            if (dynamic_cast<PuntualLight*>(llums[i]))
+                    delete (PuntualLight *)(llums[i]);
+
+        }
+    }
 
     delete cam;
 }
@@ -288,6 +297,9 @@ vec3 Scene::blinnPhong(vec3 point,vec3 normal,const Material *material,bool ombr
     return color;
 }
 
+/*
+ * Comprueba si hace hit con otros objetos de la escena
+*/
 bool Scene::hitShadow(Ray *raig,float t_min, float t_max, HitInfo& info){
     //for(Object *ob: objects)
     for (int i=0; i<objects.size(); i++)
