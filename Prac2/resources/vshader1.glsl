@@ -6,8 +6,17 @@
 #define OUT out
 #endif
 
+struct Material{
+    vec4 diffuse;
+    vec3 ambient;
+    vec3 speculat;
+    float shininess;
+};
+
 IN vec4 vPosition;
 IN vec4 vColor;
+
+uniform Material m;
 
 OUT vec4 color;
 
@@ -15,5 +24,5 @@ void main()
 {
     gl_Position = vPosition;
 
-    color = vColor;
+    color = m.diffuse;
 }

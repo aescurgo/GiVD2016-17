@@ -5,6 +5,7 @@
 #include <vector>
 #include <Common.h>
 #include <cara.h>
+#include <Material.h>
 #include <QGLShaderProgram>
 #include <QOpenGLTexture>
 
@@ -29,6 +30,9 @@ protected:
 
     // Els colors s'usen en la primera execució però després son prescindibles
     point4 *colors;
+
+    //material
+    Material *material;
 
     int Index; // index de control del numero de vertexs a passar a la GPU
 

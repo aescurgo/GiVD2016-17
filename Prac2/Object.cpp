@@ -11,6 +11,7 @@ Object::Object(int npoints, QObject *parent) : QObject(parent){
     points = new point4[numPoints];
     normals= new point4[numPoints];
     colors = new point4[numPoints];
+    this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
  }
 
 /**
@@ -22,6 +23,7 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
     points = new point4[numPoints];
     normals= new point4[numPoints];
     colors = new point4[numPoints];
+    this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
 
     readObj(n);
     make();
@@ -80,6 +82,8 @@ void Object::draw(){
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays( GL_TRIANGLES, 0, Index );
+
+    this->material->toGPU(program);
 }
 
 /**
