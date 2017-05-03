@@ -247,7 +247,11 @@ void GLWidget::initializeGL() {
 
     // Creacio d'una Light per apoder modificar el seus valors amb la interficie
     Light *l = new Light(Puntual);
+    l->setDiffuseIntensity(vec3(0.0,1.0,0.0));
     scene->addLight(l);
+
+    //cout << "first initGL" <<endl;
+
 
     camera->init(this->size().width(), this->size().height(), scene->capsaMinima);
     glViewport(camera->vp.pmin[0], camera->vp.pmin[1], camera->vp.a, camera->vp.h);
@@ -258,6 +262,8 @@ void GLWidget::initializeGL() {
 void GLWidget::paintGL() {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     camera->toGPU(program);
+    this->scene->lightsToGPU(program);
+    //this->scene->setAmbientToGPU(program);
     scene->draw();
 }
 

@@ -10,6 +10,12 @@ Scene::Scene() {
     capsaMinima.h = 2;
     capsaMinima.p = 2;
     lightAmbientGlobal = vec3(0.2, 0.2, 0.2);
+
+    //adding light
+    Light *puntual = new Light(Puntual);
+    puntual->setDiffuseIntensity(vec3(0.0,1.0,0.0));
+    this->addLight(puntual);
+
 }
 
 /**
@@ -73,6 +79,21 @@ void Scene::setLightActual(Light* l){
  */
 void Scene::lightsToGPU(QGLShaderProgram *program){
 // TO DO: A implementar a la fase 1 de la practica 2
+    //cout << "numLight: " << lights.size() <<endl;
+    gl_Light *li = new gl_Light[lights.size()];
+
+    for(unsigned int i = 0; i < lights.size(); i++){
+        li[i].diffuse = program->uniformLocation(QString("lights[%1].diffuse").arg(i));
+        glUniform4fv(li[i].diffuse,1,lights[i]->diffuse);
+
+    }
+
+
+
+
+
+
+
 
 }
 

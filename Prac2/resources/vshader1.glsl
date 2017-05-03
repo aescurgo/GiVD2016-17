@@ -13,10 +13,24 @@ struct Material{
     float shininess;
 };
 
+struct Light{
+    vec3 diffuse;
+    vec3 ambient;
+    vec3 specular;
+    vec4 direction;
+    vec4 posicion;
+    float angle;
+    float alpha;
+    float a;
+    float b;
+    float c;
+};
+
 IN vec4 vPosition;
 IN vec4 vColor;
 
 uniform Material m;
+uniform Light lights[2];
 
 OUT vec4 color;
 
@@ -24,5 +38,8 @@ void main()
 {
     gl_Position = vPosition;
 
-    color = m.diffuse;
+    //color = m.diffuse;
+    //color = lights[1].diffuse;
+    vec4 co = vec4(lights[1].diffuse, 1.0);
+    color = co;
 }

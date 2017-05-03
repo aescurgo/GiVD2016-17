@@ -19,7 +19,8 @@ Light::Light(LightType t) {
 vec3 Light::getDiffuseIntensity() {
 // TO DO: A canviar a la fase 1 de la practica 2
 
-   return(vec3(1.0, 1.0, 1.0));
+   //return(vec3(1.0, 1.0, 1.0));
+    return this->diffuse;
 }
 
 /**
@@ -29,6 +30,8 @@ vec3 Light::getDiffuseIntensity() {
 void Light::setDiffuseIntensity(vec3 i) {
     // TO DO: A canviar a la fase 1 de la practica 2
     // el float que es reb ha de multiplicar els tres valors de la intensitat difusa de la Light
+
+    this->diffuse = i;
 
 }
 vec4 Light::getLightPosition() {
