@@ -45,4 +45,6 @@ OTHER_FILES += \
 
 RESOURCES += resources.qrc
 
-DISTFILES +=
+DISTFILES += \
+    resources/vshadergouraud.vsh \
+    fshadergouraud.fsh

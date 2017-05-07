@@ -55,6 +55,8 @@ public:
 
     Capsa3D calculCapsa3D();
 
+    void calNormalVertex();
+
 private:
 
     void construeix_cara ( char **words, int nwords);

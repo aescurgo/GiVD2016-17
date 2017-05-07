@@ -243,6 +243,18 @@ void Object::readObj(QString filename){
     }
 }
 
+//TODO
+void Object::calNormalVertex()
+{
+
+    for(unsigned int i = 0; i < cares.size(); i++){
+        for(unsigned int j = 0; j < cares[i].idxVertices.size(); j++){
+
+        }
+
+    }
+}
+
 Capsa3D Object::calculCapsa3D()
 {
     vec3    pmin, pmax;

@@ -38,7 +38,7 @@ void main()
 {
     gl_Position = vPosition;
 
-    color = m.diffuse;
+    color = vec4(0.0,0.0,1.0,1.0);
     //color = lights[1].diffuse;
     //vec4 co = vec4(lights[1].diffuse.x,lights[1].diffuse.y,lights[1].diffuse.z, 1.0);
     //color = co;
