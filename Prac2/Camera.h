@@ -30,6 +30,10 @@ typedef enum {PARALLELA = 0, PERSPECTIVA = 1} TipProj;
 class Camera
 {
 public:
+    struct {
+            GLuint origin;
+        } gl_Origin;
+
     explicit Camera();
 
     Camera(vec4 lookfrom, vec4 lookat, vec4 vup, float vfov, int viewX, int viewY, float aperture, float focus_dist) ;

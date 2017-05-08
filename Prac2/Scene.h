@@ -22,6 +22,13 @@ using namespace std;
 class Scene {
 
 public:
+
+    struct gl_ambientGlobal
+    {
+        GLuint ambientGlobal;
+    };
+
+
     Scene();
     ~Scene();
 

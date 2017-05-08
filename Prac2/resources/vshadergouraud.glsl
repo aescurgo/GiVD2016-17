@@ -7,7 +7,7 @@
 #endif
 
 struct Material{
-    vec4 diffuse;
+    vec3 diffuse;
     vec3 ambient;
     vec3 speculat;
     float shininess;
@@ -28,6 +28,9 @@ struct Light{
 
 IN vec4 vPosition;
 IN vec4 vColor;
+IN vec3 vNormal;
+uniform vec4 vOrigin;
+uniform vec3 vAmbientGlobal; //luz ambienteGlobal
 
 uniform Material m;
 uniform Light lights[2];
@@ -38,8 +41,12 @@ void main()
 {
     gl_Position = vPosition;
 
-    color = vec4(0.0,0.0,1.0,1.0);
-    //color = lights[1].diffuse;
-    //vec4 co = vec4(lights[1].diffuse.x,lights[1].diffuse.y,lights[1].diffuse.z, 1.0);
+    color = vOrigin;
+    //color = vec4(m.diffuse,0.0f);
+    //vec4 co = vec4(lights[1].diffuse.x,lights[1].diffuse.y,lights[1].diffuse.z, 1.0f);
     //color = co;
 }
+/*
+vec4 calcBlinnPhong(){
+
+}*/

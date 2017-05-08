@@ -136,6 +136,10 @@ void Camera::toGPU(QGLShaderProgram *program)
 {
 // TO DO: A implementar a la fase 1 de la practica 2 i
     // a la fase 2 de la practica 2
+
+    gl_Origin.origin = program->uniformLocation("vOrigin");
+
+    glUniform4fv(gl_Origin.origin, 1, origin );
 }
 
 void Camera::setModelView(QGLShaderProgram *program, mat4 m)

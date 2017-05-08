@@ -3,10 +3,14 @@
 
 Material::Material() {
     //define material if you want a static for all
+    this->diffuse   = vec3(0.5, 0.5, 0.5);
+    this->ambient   = vec3(0.2,0.2,0.2);
+    this->specular  = vec3(1.0,1.0,1.0);
+    this->shininess = 10.0;
 
 }
 
-Material::Material(vec4 diffuse, vec3 ambient, vec3 specular, float shininess){
+Material::Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess){
     this->diffuse   = diffuse;
     this->ambient   = ambient;
     this->specular  = specular;

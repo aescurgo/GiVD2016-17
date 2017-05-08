@@ -21,9 +21,9 @@ class Material {
 
 public:
     Material();
-    Material(vec4 diffuse, vec3 ambient, vec3 specular, float shininess);
+    Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess);
     ~Material();
-    vec4 diffuse;
+    vec3 diffuse;
     vec3 ambient;
     vec3 specular;
     float shininess;

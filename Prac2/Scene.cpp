@@ -14,6 +14,10 @@ Scene::Scene() {
     //adding light
     Light *puntual = new Light(Puntual);
     puntual->setDiffuseIntensity(vec3(0.0,1.0,0.0));
+    puntual->setIa(vec3(0.4,0.4,0.4));
+    puntual->setIs(vec3(1.0,1.0,1.0));
+    puntual->setLightPosition(vec3(2,8,10));
+
     this->addLight(puntual);
 
 }
@@ -108,6 +112,9 @@ void Scene::addLight(Light *l) {
  */
 void Scene::setAmbientToGPU(QGLShaderProgram *program){
     // TO DO: A implementar a la fase 1 de la practica 2
+
+    gl_ambientGlobal.ambientGlobal = program->uniformLocation("vAmbientGlobal");
+    glUniform3fv(gl_ambientGlobal.ambientGlobal, 1, this->lightAmbientGlobal);
 
 }
 

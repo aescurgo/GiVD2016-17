@@ -11,7 +11,7 @@ Object::Object(int npoints, QObject *parent) : QObject(parent){
     points = new point4[numPoints];
     normals= new point4[numPoints];
     colors = new point4[numPoints];
-    this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
+    this->material = new Material();
  }
 
 /**
@@ -23,7 +23,8 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
     points = new point4[numPoints];
     normals= new point4[numPoints];
     colors = new point4[numPoints];
-    this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
+    //this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
+    this->material = new Material();
 
     readObj(n);
     make();
@@ -70,15 +71,20 @@ void Object::draw(){
 
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4)*Index, &points[0] );
     glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &colors[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(vec3)*Index, &normals[0] );//pasamos las normales
 
     int vertexLocation = program->attributeLocation("vPosition");
     int colorLocation = program->attributeLocation("vColor");
+    int normalLocation = program->attributeLocation("vNormal");
 
     program->enableAttributeArray(vertexLocation);
     program->setAttributeBuffer("vPosition", GL_FLOAT, 0, 4);
 
     program->enableAttributeArray(colorLocation);
     program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4)*Index, 4);
+
+    program->enableAttributeArray(normalLocation);
+    program->setAttributeBuffer("vNormal", GL_FLOAT, sizeof(point4)*Index, 4);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays( GL_TRIANGLES, 0, Index );
