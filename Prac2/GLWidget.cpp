@@ -32,6 +32,9 @@ void GLWidget::activaGouraudShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Gouraud"<<endl;
     initShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraud.glsl");
+    program->link();
+    program->bind();
+
     updateGL();
 
 }

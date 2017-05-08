@@ -255,6 +255,9 @@ void Object::calNormalVertex()
 
     for(unsigned int i = 0; i < cares.size(); i++){
         for(unsigned int j = 0; j < cares[i].idxVertices.size(); j++){
+            normals[cares[i].idxVertices[j]] = cares[i].normal;
+            cout << normals[i] << endl;
+
 
         }
 

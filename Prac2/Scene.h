@@ -23,10 +23,10 @@ class Scene {
 
 public:
 
-    struct gl_ambientGlobal
+    struct
     {
         GLuint ambientGlobal;
-    };
+    }gl_ambientGlobal;
 
 
     Scene();

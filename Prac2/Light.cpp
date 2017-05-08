@@ -36,10 +36,12 @@ void Light::setDiffuseIntensity(vec3 i) {
 }
 vec4 Light::getLightPosition() {
     // A canviar
-    return(vec4(0.0, 0.0, 0.0, 0.0));
+    //return(vec4(0.0, 0.0, 0.0, 0.0));
+    return this->position;
 }
 
 void Light::setLightPosition(vec4 v) {
+    this->position = v;
 
 }
 

@@ -86,6 +86,7 @@ void Scene::lightsToGPU(QGLShaderProgram *program){
     //cout << "numLight: " << lights.size() <<endl;
     gl_Light *li = new gl_Light[lights.size()];
 
+    //TODO pasarle todos los componentes
     for(unsigned int i = 0; i < lights.size(); i++){
         li[i].diffuse = program->uniformLocation(QString("lights[%1].diffuse").arg(i));
         glUniform4fv(li[i].diffuse,1,lights[i]->diffuse);
