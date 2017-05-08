@@ -31,7 +31,7 @@ void Material::toGPU(QGLShaderProgram *program){
     mate.specular = program->uniformLocation("m.specular");
     mate.shininess = program->uniformLocation("m.shininess");
 
-    glUniform4fv(mate.diffuse,1,this->diffuse);
+    glUniform3fv(mate.diffuse,1,this->diffuse);
     glUniform3fv(mate.ambient,1,this->ambient);
     glUniform3fv(mate.specular,1,this->specular);
     glUniform1f(mate.shininess,this->shininess);

@@ -9,7 +9,7 @@
 struct Material{
     vec3 diffuse;
     vec3 ambient;
-    vec3 speculal;
+    vec3 specular;
     float shininess;
 };
 
