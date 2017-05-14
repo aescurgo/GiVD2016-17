@@ -24,5 +24,7 @@
         <file>resources/vshadergouraud.glsl</file>
         <file>resources/fshaderphong.glsl</file>
         <file>resources/vshaderphong.glsl</file>
+        <file>resources/fshadertoon.glsl</file>
+        <file>resources/vshadertoon.glsl</file>
     </qresource>
 </RCC>

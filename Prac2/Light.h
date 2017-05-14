@@ -11,7 +11,7 @@ struct gl_Light{
     GLuint diffuse;
     GLuint ambient;
     GLuint specular;
-    //GLuint direction;
+    GLuint direction;
     GLuint position;
     //GLuint angle;
     //GLuint alpha;
@@ -49,6 +49,9 @@ class Light {
 
         vec3 getCoeficients() const;
         void setCoeficients(const vec3 &value);
+
+        vec4 getDirection();
+        void setDirection(vec4 value);
 
         bool getEstaActivat() const;//TODO
         void setEstaActivat(bool value);

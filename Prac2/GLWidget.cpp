@@ -20,6 +20,13 @@ GLWidget::~GLWidget() {
 void GLWidget::activaToonShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Toon"<<endl;
+
+    initShader("://resources/vshadertoon.glsl", "://resources/fshadertoon.glsl");
+    program->link();
+    program->bind();
+
+    updateGL();
+
 }
 
 void GLWidget::activaPhongShader() {

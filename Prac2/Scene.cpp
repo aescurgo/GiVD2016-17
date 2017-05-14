@@ -18,6 +18,7 @@ Scene::Scene() {
     puntual->setIs(vec3(1.0,1.0,1.0));
     puntual->setLightPosition(vec4(2,8,10,0.0));
     puntual->setCoeficients(vec3(0.0,0.0,0.8));
+    puntual->setDirection(vec4(0.0,0.0,10.0,1.0)); // to test
 
     this->addLight(puntual);
 
@@ -91,7 +92,7 @@ void Scene::lightsToGPU(QGLShaderProgram *program){
         li[i].diffuse = program->uniformLocation(QString("lights[%1].diffuse").arg(i));
         li[i].ambient = program->uniformLocation(QString("lights[%1].ambient").arg(i));
         li[i].specular = program->uniformLocation(QString("lights[%1].specular").arg(i));
-        //li[i].direction = program->uniformLocation(QString("lights[%1].direction").arg(i));
+        li[i].direction = program->uniformLocation(QString("lights[%1].direction").arg(i));
         li[i].position = program->uniformLocation(QString("lights[%1].position").arg(i));
         //li[i].angle = program->uniformLocation(QString("lights[%1].angle").arg(i));
         //li[i].alpha = program->uniformLocation(QString("lights[%1].alpha").arg(i));
@@ -100,7 +101,7 @@ void Scene::lightsToGPU(QGLShaderProgram *program){
         glUniform3fv(li[i].diffuse,1,lights[i]->getDiffuseIntensity());
         glUniform3fv(li[i].ambient,1,lights[i]->getIa());
         glUniform3fv(li[i].specular,1,lights[i]->getIs());
-        //glUniform4fv(li[i].direction,1,lights[i]->direction);
+        glUniform4fv(li[i].direction,1,lights[i]->direction);
         glUniform4fv(li[i].position,1,lights[i]->getLightPosition());
         //glUniform1f(li[i].angle,lights[i]->angle);
         //glUniform1f(li[i].alpha,lights[i]->alpha);

@@ -45,6 +45,17 @@ void Light::setLightPosition(vec4 v) {
 
 }
 
+
+vec4 Light::getDirection() {
+    // A canviar
+    //return(vec4(0.0, 0.0, 0.0, 0.0));
+    return this->direction;
+}
+
+void Light::setDirection(vec4 v) {
+    this->direction = v;
+}
+
 /**
  * @brief Light::switchOnOff
  */
