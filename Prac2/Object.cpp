@@ -27,6 +27,7 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
     this->material = new Material();
 
     readObj(n);
+    calNormalVertex();
     make();
 }
 
@@ -70,18 +71,18 @@ void Object::draw(){
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4)*Index, &points[0] );
-    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &colors[0] );
-    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(vec3)*Index, &normals[0] );//pasamos las normales
+    //glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &colors[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &normals[0] );//pasamos las normales
 
     int vertexLocation = program->attributeLocation("vPosition");
-    int colorLocation = program->attributeLocation("vColor");
+    //int colorLocation = program->attributeLocation("vColor");
     int normalLocation = program->attributeLocation("vNormal");
 
     program->enableAttributeArray(vertexLocation);
     program->setAttributeBuffer("vPosition", GL_FLOAT, 0, 4);
 
-    program->enableAttributeArray(colorLocation);
-    program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4)*Index, 4);
+    //program->enableAttributeArray(colorLocation);
+    //program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4)*Index, 4);
 
     program->enableAttributeArray(normalLocation);
     program->setAttributeBuffer("vNormal", GL_FLOAT, sizeof(point4)*Index, 4);
@@ -115,6 +116,7 @@ void Object::make(){
             Index++;
         }
     }
+
 }
 
 
@@ -247,21 +249,34 @@ void Object::readObj(QString filename){
     for(unsigned int i=0; i<cares.size(); i++){
         cares[i].calculaNormal(vertexs);
     }
+
+
 }
 
-//TODO
+
 void Object::calNormalVertex()
 {
+    vector<vec4> allNormals(vertexs.size()); //allocate all normals, his index is vertexID
+    vector<float> vertexID;
+    int count = 0;
 
     for(unsigned int i = 0; i < cares.size(); i++){
         for(unsigned int j = 0; j < cares[i].idxVertices.size(); j++){
-            normals[cares[i].idxVertices[j]] = cares[i].normal;
-            cout << normals[i] << endl;
-
+            vertexID.push_back(cares[i].idxVertices[j]);
+            allNormals[cares[i].idxVertices[j]] += cares[i].normal;
+            count++;
+            //cout<<"cares-> "<<i <<" : "<<cares[i].idxVertices[j]<<endl;
 
         }
 
     }
+
+
+    for(unsigned int i = 0; i < count; i++){
+        normals[i] = allNormals[vertexID[i]] / length(allNormals[vertexID[i]]);
+        //cout << "normal-> " << normals[i] << endl;
+    }
+
 }
 
 Capsa3D Object::calculCapsa3D()

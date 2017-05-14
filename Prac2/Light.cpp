@@ -61,7 +61,8 @@ vec3 Light::getIa() const
 {
     // TO DO: A canviar a la fase 1 de la practica 2
 
-       return(vec3(1.0, 1.0, 1.0));
+       //return(vec3(1.0, 1.0, 1.0));
+    return this->ambient;
 }
 
 /**
@@ -72,6 +73,7 @@ void Light::setIa(const vec3 &value)
 {
     // TO DO: A canviar a la fase 1 de la practica 2
     // el float que es reb ha de multiplicar els tres valors de la intensitat difusa de la Light
+    this->ambient = value;
 
 }
 
@@ -85,7 +87,7 @@ vec3 Light::getIs() const
 {
     // TO DO: A canviar a la fase 1 de la practica 2
 
-       return(vec3(1.0, 1.0, 1.0));
+       return this->specular;
 }
 
 /**
@@ -96,6 +98,7 @@ void Light::setIs(const vec3 &value)
 {
     // TO DO: A canviar a la fase 1 de la practica 2
     // el float que es reb ha de multiplicar els tres valors de la intensitat difusa de la Light
+    this->specular = value;
 
 }
 
@@ -107,7 +110,7 @@ vec3 Light::getCoeficients() const
 {
     // TO DO: A canviar a la fase 1 de la practica 2
 
-       return(vec3(1.0, 1.0, 1.0));
+       return this->coef;
 }
 
 /**
@@ -118,7 +121,7 @@ void Light::setCoeficients(const vec3 &value)
 {
     // TO DO: A canviar a la fase 1 de la practica 2
     // el float que es reb ha de multiplicar els tres valors de la intensitat difusa de la Light
-
+    this->coef = value;
 }
 
 /**

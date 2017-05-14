@@ -25,6 +25,11 @@ void GLWidget::activaToonShader() {
 void GLWidget::activaPhongShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Phong"<<endl;
+    initShader("://resources/vshaderphong.glsl", "://resources/fshaderphong.glsl");
+    program->link();
+    program->bind();
+
+    updateGL();
 
 }
 
@@ -268,7 +273,7 @@ void GLWidget::paintGL() {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     camera->toGPU(program);
     this->scene->lightsToGPU(program);
-    //this->scene->setAmbientToGPU(program);
+    this->scene->setAmbientToGPU(program);
     scene->draw();
 }
 

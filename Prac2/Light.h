@@ -11,13 +11,11 @@ struct gl_Light{
     GLuint diffuse;
     GLuint ambient;
     GLuint specular;
-    GLuint direction;
+    //GLuint direction;
     GLuint position;
-    GLuint angle;
-    GLuint alpha;
-    GLuint a;
-    GLuint b;
-    GLuint c;
+    //GLuint angle;
+    //GLuint alpha;
+    GLuint coef;
 };
 
 // Classe que representa els atributs d'una Light
@@ -32,14 +30,13 @@ class Light {
         vec4 position;
         GLfloat angle;
         GLfloat alpha;
-        GLfloat a;
-        GLfloat b;
-        GLfloat c;
+        vec3 coef;
+        bool active;
 
         vec4 getLightPosition();
         void setLightPosition(vec4 v);
 
-        void switchOnOff();
+        void switchOnOff();//TODO
 
         vec3 getIa() const;
         void setIa(const vec3 &value);
@@ -53,7 +50,7 @@ class Light {
         vec3 getCoeficients() const;
         void setCoeficients(const vec3 &value);
 
-        bool getEstaActivat() const;
+        bool getEstaActivat() const;//TODO
         void setEstaActivat(bool value);
 
         LightType getTipusLight() const;

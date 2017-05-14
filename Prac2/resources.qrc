@@ -22,5 +22,7 @@
         <file>resources/textures/2k_venus_surface.jpg</file>
         <file>resources/fshadergouraud.glsl</file>
         <file>resources/vshadergouraud.glsl</file>
+        <file>resources/fshaderphong.glsl</file>
+        <file>resources/vshaderphong.glsl</file>
     </qresource>
 </RCC>
