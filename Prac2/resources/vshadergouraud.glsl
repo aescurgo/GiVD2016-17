@@ -30,6 +30,9 @@ IN vec4 vNormal;
 uniform vec4 vOrigin;
 uniform vec3 vAmbientGlobal; //light ambienteGlobal
 
+uniform vec4 vModView;
+uniform vec4 vModProj;
+
 uniform Material m;
 uniform Light lights[2];
 

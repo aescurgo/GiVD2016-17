@@ -144,11 +144,17 @@ void Camera::toGPU(QGLShaderProgram *program)
 
 void Camera::setModelView(QGLShaderProgram *program, mat4 m)
 {
+    model_view = program->uniformLocation("vModView");
+    glUniformMatrix4fv(model_view,1,GL_TRUE,modView);
+
  // TO DO: A implementar a la fase 2 de la practica 2
 }
 
 void Camera::setProjection(QGLShaderProgram *program, mat4 p)
 {
+    projection = program->uniformLocation("vModProj");
+    glUniformMatrix4fv(model_view,1,GL_TRUE,proj);
+
     // TO DO: A implementar a la fase 2 de la practica 2
 }
 
