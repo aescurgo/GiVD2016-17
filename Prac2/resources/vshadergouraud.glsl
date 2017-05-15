@@ -64,17 +64,15 @@ float calAtenuation(Light l){
 
 
 vec4 calBlinnPhong(){
-
-    //for lights
-
+    vec4 normal = vNormal;
     vec4 vecL = calL(0);//todo pass the light iterator
     vec4 vecV = calV();
     vec4 vecH = calH(vecL,vecV);
-    float NH = dot(vNormal,vecH);
+    float NH = dot(normal,vecH);
 
     vec4 vecAmbientGlo = vec4(m.ambient * vAmbientGlobal,1.0);
     vec4 ambient = vec4(m.ambient * lights[0].ambient,1.0);
-    vec4 diffuse = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,vNormal),0.0f);
+    vec4 diffuse = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,normal),0.0f);
     vec4 specular = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
     float atenuation = calAtenuation(lights[0]);
 
@@ -85,6 +83,7 @@ vec4 calBlinnPhong(){
 
 void main()
 {
+    //gl_Position = vModProj * vModView *vPosition;
     gl_Position = vPosition;
 
     color = calBlinnPhong();

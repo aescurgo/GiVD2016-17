@@ -27,6 +27,7 @@ protected:
     int     numPoints;
     point4 *points;
     point4 *normals;
+    vector<vec4> allNormals;//aqui guardaremos todas las normales sin repetir
 
     // Els colors s'usen en la primera execució però després son prescindibles
     point4 *colors;

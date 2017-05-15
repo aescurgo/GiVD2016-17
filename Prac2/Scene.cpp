@@ -9,16 +9,16 @@ Scene::Scene() {
     capsaMinima.a = 2;
     capsaMinima.h = 2;
     capsaMinima.p = 2;
-    lightAmbientGlobal = vec3(0.2, 0.2, 0.2);
+    lightAmbientGlobal = vec3(0.01, 0.01, 0.01);
 
     //adding light
     Light *puntual = new Light(Puntual);
-    puntual->setDiffuseIntensity(vec3(0.5,0.5,0.5));
+    puntual->setDiffuseIntensity(vec3(1.0,0.5,0.5));
     puntual->setIa(vec3(0.4,0.4,0.4));
     puntual->setIs(vec3(1.0,1.0,1.0));
-    puntual->setLightPosition(vec4(2,8,10,0.0));
+    puntual->setLightPosition(vec4(2.0,2.0,2.0,1.0));
     puntual->setCoeficients(vec3(0.0,0.0,0.8));
-    puntual->setDirection(vec4(0.0,0.0,10.0,1.0)); // to test
+    puntual->setDirection(- vec4(2.0,2.0,2.0,1.0)); // to test
 
     this->addLight(puntual);
 

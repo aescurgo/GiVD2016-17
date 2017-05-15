@@ -26,6 +26,7 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
     //this->material = new Material(vec4(1.0,0.0,0.0,0.0),vec3(0.0),vec3(0.0),1.0);
     this->material = new Material();
 
+
     readObj(n);
     calNormalVertex();
     make();
@@ -72,7 +73,7 @@ void Object::draw(){
 
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4)*Index, &points[0] );
     //glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &colors[0] );
-    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &normals[0] );//pasamos las normales
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &normals[0] );//pasamos las normales a la gpu por el buffer
 
     int vertexLocation = program->attributeLocation("vPosition");
     //int colorLocation = program->attributeLocation("vColor");
@@ -113,6 +114,7 @@ void Object::make(){
         for(unsigned int j=0; j<cares[i].idxVertices.size(); j++){
             points[Index] = vertexs[cares[i].idxVertices[j]];
             colors[Index] = vec4(base_colors[j%4], 1.0);
+            normals[Index] = allNormals[cares[i].idxVertices[j]]; //also add normals with the same dimensions like points.
             Index++;
         }
     }
@@ -256,14 +258,19 @@ void Object::readObj(QString filename){
 
 void Object::calNormalVertex()
 {
-    vector<vec4> allNormals(vertexs.size()); //allocate all normals, his index is vertexID
+
+    //allNormals = allNormals(vertexs.size()); //allocate all normals, his index is vertexID
+    for (unsigned int i = 0; i < vertexs.size(); i++) allNormals.push_back(vec4(0.0f));
     vector<float> vertexID;
     int count = 0;
+    float mod;
 
     for(unsigned int i = 0; i < cares.size(); i++){
+        //cares[i].calculaNormal(vertexs);
         for(unsigned int j = 0; j < cares[i].idxVertices.size(); j++){
             vertexID.push_back(cares[i].idxVertices[j]);
-            allNormals[cares[i].idxVertices[j]] += cares[i].normal;
+            allNormals[cares[i].idxVertices[j]] += cares[i].normal;//vamos guardando las normales
+
             count++;
             //cout<<"cares-> "<<i <<" : "<<cares[i].idxVertices[j]<<endl;
 
@@ -272,10 +279,16 @@ void Object::calNormalVertex()
     }
 
 
-    for(unsigned int i = 0; i < count; i++){
-        normals[i] = allNormals[vertexID[i]] / length(allNormals[vertexID[i]]);
+    //hacemosla media para cada normal
+    for(unsigned int i = 0; i < allNormals.size(); i++){
+        mod = 0.0;
+        mod = sqrt(pow(allNormals[i].x,2) + pow(allNormals[i].y,2) +pow(allNormals[i].z,2));
+        allNormals[i] /= mod;
+        //allNormals[i] = allNormals[vertexID[i]] / length(allNormals[vertexID[i]]);
         //cout << "normal-> " << normals[i] << endl;
     }
+
+
 
 }
 

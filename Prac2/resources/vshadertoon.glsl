@@ -24,13 +24,14 @@ struct Light{
 IN vec4 vNormal;
 IN vec4 vPosition;
 OUT vec4 fNormal;
+OUT vec4 fPosition;
 
 
 void main()
 {
     gl_Position = vPosition;
     fNormal = vNormal;
-
+    fPosition = vPosition;
 }
 
 
