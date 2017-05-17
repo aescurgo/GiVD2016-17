@@ -62,6 +62,8 @@ void Light::setDirection(vec4 v) {
 void Light::switchOnOff() {
     // TO DO: A canviar a la fase 1 de la practica 2
     // Si esta en on la posa a off i a l'inreves
+
+    this->active = !active;//si esta active la desactivamos y viceversa
  }
 
 /**
@@ -143,7 +145,7 @@ bool Light::getEstaActivat() const
 {
     // TO DO: A canviar a la fase 1 de la practica 2
 
-       return(true);
+       return(this->active);
 }
 
 /**
@@ -153,6 +155,7 @@ bool Light::getEstaActivat() const
 void Light::setEstaActivat(bool value)
 {
     // TO DO: A canviar a la fase 1 de la practica 2
+    this->active = value;
 
 }
 

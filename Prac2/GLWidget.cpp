@@ -72,6 +72,12 @@ void GLWidget::updateShader(){
 void GLWidget::updateShaderTexture(){
     //A implementar a la fase 1 de la practica 2
 
+    initShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraudTexture.glsl");
+    program->link();
+    program->bind();
+
+    updateGL();
+
 }
 void GLWidget::ensenyaMenuLight0() {
     // Agafa la darrera llum creada. A CANVIAR si es vol tenir control de totes les llums.
@@ -87,6 +93,7 @@ void GLWidget::changePositionLight() {
     // Des d'quest mètode s'AFEGEIX una nova llum
     // tipus rep el tipus de llum que es vol afegir. Des d'aqui s'afegeix la llum a l'escena
     scene->getLightActual()->setTipusLight(Puntual);
+    updateGL();
 
 }
 void GLWidget::changeDirectionalLight() {
@@ -94,6 +101,7 @@ void GLWidget::changeDirectionalLight() {
     // TO DO: cal modificar en la fase 1 de la practica 2
     // Des d'quest mètode s'AFEGEIX una nova llum
     scene->getLightActual()->setTipusLight(Direccional);
+    updateGL();
 
 }
 void GLWidget::changeSpotLight() {
@@ -101,6 +109,7 @@ void GLWidget::changeSpotLight() {
     // TO DO: cal modificar en la fase 1 de la practica 2
     // Des d'quest mètode s'AFEGEIX una nova llum
     scene->getLightActual()->setTipusLight(Spot);
+    updateGL();
 
 }
 void GLWidget::updateXPositionLight(int xposition) {
@@ -108,6 +117,7 @@ void GLWidget::updateXPositionLight(int xposition) {
     vec4 v = scene->getLightActual()->getLightPosition();
     v[0] = (float)xposition;
     scene->getLightActual()->setLightPosition(v);
+    updateGL();
 }
 
 void GLWidget::updateYPositionLight(int yposition) {
@@ -115,6 +125,7 @@ void GLWidget::updateYPositionLight(int yposition) {
     vec4 v = scene->getLightActual()->getLightPosition();
     v[1] = (float)yposition;
     scene->getLightActual()->setLightPosition(v);
+    updateGL();
 }
 
 void GLWidget::updateZPositionLight(int zposition) {
@@ -122,6 +133,7 @@ void GLWidget::updateZPositionLight(int zposition) {
     vec4 v = scene->getLightActual()->getLightPosition();
     v[2] = (float)zposition;
     scene->getLightActual()->setLightPosition(v);
+    updateGL();
 }
 
 void GLWidget::updateLightIntensity(int intens) {
@@ -133,10 +145,15 @@ void GLWidget::updateLightIntensity(int intens) {
     intensitat[2] = intens/200.0; // el 200 es l'escala del scrollbar
 
     scene->getLightActual()->setDiffuseIntensity(intensitat);
+    updateGL();
 }
 
 void GLWidget::activateLight(){
     scene->getLightActual()->switchOnOff();
+    scene->lightsToGPU(program);
+
+    activaGouraudShader();
+    updateGL();
 }
 
 void GLWidget::activaBumpMapping() {
@@ -263,9 +280,10 @@ void GLWidget::initializeGL() {
     initShadersGPU();
 
     // Creacio d'una Light per apoder modificar el seus valors amb la interficie
-    Light *l = new Light(Puntual);
+    /*Light *l = new Light(Puntual);
     l->setDiffuseIntensity(vec3(0.0,1.0,0.0));
-    scene->addLight(l);
+    scene->addLight(l);*/
+    //laz luces las añadido en la construtora de Scene
 
     //cout << "first initGL" <<endl;
 
@@ -282,6 +300,7 @@ void GLWidget::paintGL() {
     this->scene->lightsToGPU(program);
     this->scene->setAmbientToGPU(program);
     scene->draw();
+    //scene->drawTexture();
 }
 
 

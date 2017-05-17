@@ -30,7 +30,9 @@ void main()
     float intensity;
     vec4 color;
 
-    intensity = dot(lights[0].direction , fNormal);
+    vec4 directionLight = lights[0].position - fPosition;//vector que hay entre el pixel y la luz
+
+    intensity = dot(normalize(directionLight) , normalize(fNormal));
 
     if(intensity > 0.95) color = vec4(1.0,0.5,0.5,1.0);
     else if(intensity > 0.5) color = vec4(0.6,0.3,0.3,1.0);

@@ -17,11 +17,12 @@ struct Light{
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
-    //vec4 direction;
+    vec4 direction;
     vec4 position;
-    //float angle;
-    //float alpha;
+    float angle;
+    float alpha;
     vec3 coef;//atenuacion
+    bool active;
 };
 
 IN vec4 vPosition;

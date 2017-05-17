@@ -28,6 +28,7 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
 
 
     readObj(n);
+    //initTextura();
     calNormalVertex();
     make();
 }
@@ -54,8 +55,10 @@ void Object::toGPU(QGLShaderProgram *pr) {
     glGenBuffers( 1, &buffer );
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
-    glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, NULL, GL_STATIC_DRAW );
+    //mod el tamaño del buffer para poder pasar tambien las coordTexture
+    glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index +sizeof(vec2)*Index, NULL, GL_STATIC_DRAW );
     glEnable( GL_DEPTH_TEST );
+    glEnable(GL_TEXTURE_2D); //para la texture
 
 }
 
@@ -102,6 +105,9 @@ void Object::make(){
     // TO  DO: A modificar a la fase 1 de la practica 2
     // Cal calcular la normal a cada vertex a la CPU
 
+    //inicializamos las texturas
+    //initTextura();
+
     static vec3  base_colors[] = {
         vec3( 1.0, 0.0, 0.0 ),
         vec3( 0.0, 1.0, 0.0 ),
@@ -115,9 +121,12 @@ void Object::make(){
             points[Index] = vertexs[cares[i].idxVertices[j]];
             colors[Index] = vec4(base_colors[j%4], 1.0);
             normals[Index] = allNormals[cares[i].idxVertices[j]]; //also add normals with the same dimensions like points.
+
             Index++;
         }
     }
+
+
 
 }
 
@@ -134,6 +143,9 @@ void Object::toGPUTexture(QGLShaderProgram *pr) {
 // TO DO: Cal implementar en la fase 2 de la practica 2
 // S'ha d'activar la textura i es passa a la GPU
 
+    //lo he añadido al toGPU principal
+    //se modifica el tamaño del buffer
+
 }
 
 
@@ -145,6 +157,21 @@ void Object::drawTexture(){
 
     // TO DO: Cal implementar en la fase 2 de la practica 2
     // S'ha d'activar la textura i es passa a la GPU
+
+    // Aqui es torna a repetir el pas de dades a la GPU per si hi ha més d'un objecte
+    glBindBuffer( GL_ARRAY_BUFFER, buffer );
+
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, sizeof(vec2)*Index, &verTexture[0] );//pasamos las txture a la gpu por el buffer
+
+
+    int textureLocation = program->attributeLocation("vCoordTexture");
+
+
+    program->enableAttributeArray(textureLocation);
+    program->setAttributeBuffer("vCoordTexture", GL_FLOAT, sizeof(point4)*Index +  sizeof(point4)*Index, 2);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays( GL_TRIANGLES, 0, Index );
 
 }
 
@@ -158,6 +185,14 @@ void Object::initTextura()
     // TO DO: A implementar a la fase 2 de la practica 2
     // Cal inicialitzar la textura de l'objecte: veure l'exemple del CubGPUTextura
     qDebug() << "Initializing textures...";
+
+    // Carregar la textura
+    glActiveTexture(GL_TEXTURE0);
+    texture = new QOpenGLTexture(QImage("://resources/textures/earth1.png"));
+    texture->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    texture->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    texture->bind(0);
 
  }
 

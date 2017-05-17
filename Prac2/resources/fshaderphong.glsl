@@ -22,11 +22,12 @@ struct Light{
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
-    //vec4 direction;
+    vec4 direction;
     vec4 position;
-    //float angle;
-    //float alpha;
+    float angle;
+    float alpha;
     vec3 coef;//atenuacion
+    bool active;
 };
 
 uniform vec4 vOrigin;
@@ -61,22 +62,54 @@ float calAtenuation(Light l){
 }
 
 
+//metodo blinn, devulve el color asignado a cada pixel
+/*
+ * [0] -> puntual
+ * [1] -> direccional
+ * [2] -> spot
+ */
 vec4 calBlinnPhong(){
+    vec4 colorFinal, colorPuntual, colorDireccional;
 
-    //for lights
-
-    vec4 vecL = calL(0);//todo pass the light iterator
+    //vec common to puntual, direccional y spot
+    vec4 normal = fNormal;
     vec4 vecV = calV();
-    vec4 vecH = calH(vecL,vecV);
-    float NH = dot(fNormal,vecH);
-
     vec4 vecAmbientGlo = vec4(m.ambient * vAmbientGlobal,1.0);
-    vec4 ambient = vec4(m.ambient * lights[0].ambient,1.0);
-    vec4 diffuse = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,fNormal),0.0f);
-    vec4 specular = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
+
+    colorFinal = vecAmbientGlo;
+
+    //puntual
+    vec4 vecL = calL(0);
+    vec4 vecH = calH(vecL,vecV);
+    float NH  = dot(normal,vecH);
+
+    vec4 ambient     = vec4(m.ambient * lights[0].ambient,1.0);
+    vec4 diffuse     = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,normal),0.0f);
+    vec4 specular    = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
     float atenuation = calAtenuation(lights[0]);
 
-    return vecAmbientGlo + ambient + (atenuation * (diffuse + specular));
+    colorPuntual = (ambient + (atenuation * (diffuse + specular)));
+
+    //direccional
+    vec4 vecLDir = calL(1);
+    vec4 vecHDir = calH(vecLDir,vecV);
+    float NHDir  = dot(normal,vecHDir);
+
+    vec4 ambientDir     = vec4(m.ambient * lights[1].ambient,1.0);
+    vec4 diffuseDir     = vec4(m.diffuse * lights[1].diffuse,1.0 ) * max(dot(vecLDir,normal),0.0f);
+    vec4 specularDir    = vec4(m.specular * lights[1].specular,1.0) * pow(max(NHDir,0.0f), m.shininess);
+    float atenuationDir = calAtenuation(lights[1]);
+
+    colorDireccional = (ambientDir + (atenuationDir * (diffuseDir + specularDir)));
+
+    //si esta activa sumamos la contribucion de dicha luz al colorFinal
+    //si no solo mostramos el ambiente global
+    if (lights[0].active == true)
+        colorFinal = colorPuntual;
+    else if(lights[1].active == true)
+        colorFinal += colorDireccional ;
+
+    return colorFinal;
 
 }
 

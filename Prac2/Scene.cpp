@@ -12,15 +12,40 @@ Scene::Scene() {
     lightAmbientGlobal = vec3(0.01, 0.01, 0.01);
 
     //adding light
+    /*
+     * [0] -> puntual
+     * [1] -> direccional
+     * [2] -> spot
+     */
+
     Light *puntual = new Light(Puntual);
     puntual->setDiffuseIntensity(vec3(1.0,0.5,0.5));
     puntual->setIa(vec3(0.4,0.4,0.4));
     puntual->setIs(vec3(1.0,1.0,1.0));
     puntual->setLightPosition(vec4(2.0,2.0,2.0,1.0));
     puntual->setCoeficients(vec3(0.0,0.0,0.8));
-    puntual->setDirection(- vec4(2.0,2.0,2.0,1.0)); // to test
+    puntual->setEstaActivat(true);
+
+    Light *direccional = new Light(Direccional);
+    direccional->setDiffuseIntensity(vec3(1.0,0.5,0.5));
+    direccional->setIa(vec3(0.4,0.4,0.4));
+    direccional->setIs(vec3(1.0,1.0,1.0));
+    direccional->setLightPosition(vec4(4.0,4.0,4.0,1.0));
+    direccional->setCoeficients(vec3(0.5,0.5,0.5));
+    direccional->setEstaActivat(true);
+
+    Light *spot = new Light(Spot);
+    spot->setDiffuseIntensity(vec3(1.0,0.5,0.5));
+    spot->setIa(vec3(0.4,0.4,0.4));
+    spot->setIs(vec3(1.0,1.0,1.0));
+    spot->setLightPosition(vec4(4.0,4.0,4.0,1.0));
+    spot->setDirection(-vec4(4.0,4.0,4.0,1.0));
+    spot->setCoeficients(vec3(0.5,0.5,0.5));
+    spot->setEstaActivat(true);
 
     this->addLight(puntual);
+    this->addLight(direccional);
+    this->addLight(spot);
 
 }
 
@@ -94,18 +119,20 @@ void Scene::lightsToGPU(QGLShaderProgram *program){
         li[i].specular = program->uniformLocation(QString("lights[%1].specular").arg(i));
         li[i].direction = program->uniformLocation(QString("lights[%1].direction").arg(i));
         li[i].position = program->uniformLocation(QString("lights[%1].position").arg(i));
-        //li[i].angle = program->uniformLocation(QString("lights[%1].angle").arg(i));
-        //li[i].alpha = program->uniformLocation(QString("lights[%1].alpha").arg(i));
+        li[i].angle = program->uniformLocation(QString("lights[%1].angle").arg(i));
+        li[i].alpha = program->uniformLocation(QString("lights[%1].alpha").arg(i));
         li[i].coef = program->uniformLocation(QString("lights[%1].coef").arg(i));
+        li[i].active = program->uniformLocation(QString("lights[%1].active").arg(i));
 
         glUniform3fv(li[i].diffuse,1,lights[i]->getDiffuseIntensity());
         glUniform3fv(li[i].ambient,1,lights[i]->getIa());
         glUniform3fv(li[i].specular,1,lights[i]->getIs());
         glUniform4fv(li[i].direction,1,lights[i]->direction);
         glUniform4fv(li[i].position,1,lights[i]->getLightPosition());
-        //glUniform1f(li[i].angle,lights[i]->angle);
-        //glUniform1f(li[i].alpha,lights[i]->alpha);
+        glUniform1f(li[i].angle,lights[i]->angle);
+        glUniform1f(li[i].alpha,lights[i]->alpha);
         glUniform3fv(li[i].coef,1,lights[i]->getCoeficients());
+        glUniform1i(li[i].active,lights[i]->active);
 
 
     }

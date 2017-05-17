@@ -13,9 +13,10 @@ struct gl_Light{
     GLuint specular;
     GLuint direction;
     GLuint position;
-    //GLuint angle;
-    //GLuint alpha;
+    GLuint angle;
+    GLuint alpha;
     GLuint coef;
+    GLuint active;
 };
 
 // Classe que representa els atributs d'una Light
@@ -31,7 +32,7 @@ class Light {
         GLfloat angle;
         GLfloat alpha;
         vec3 coef;
-        bool active;
+        bool active;//gestiona si esta activa o no la luz
 
         vec4 getLightPosition();
         void setLightPosition(vec4 v);
