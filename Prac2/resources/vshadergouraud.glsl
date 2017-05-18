@@ -28,19 +28,18 @@ struct Light{
 IN vec4 vPosition;
 //IN vec4 vColor;
 IN vec4 vNormal;
-IN vec2 vCoordTexture;
 
 uniform vec4 vOrigin;
 uniform vec3 vAmbientGlobal; //light ambienteGlobal
 
-uniform vec4 vModView;
-uniform vec4 vModProj;
+uniform mat4 vModView;
+uniform mat4 vModProj;
 
 uniform Material m;
 uniform Light lights[2];
 
 OUT vec4 color;
-OUT vec2 v_texcoord;
+OUT vec4 fNormal;
 
 vec4 calL(int i){
     return normalize(lights[i].position - vPosition);
@@ -82,36 +81,41 @@ vec4 calBlinnPhong(){
 
     colorFinal = vecAmbientGlo;
 
-    //puntual
-    vec4 vecL = calL(0);
-    vec4 vecH = calH(vecL,vecV);
-    float NH  = dot(normal,vecH);
-
-    vec4 ambient     = vec4(m.ambient * lights[0].ambient,1.0);
-    vec4 diffuse     = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,normal),0.0f);
-    vec4 specular    = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
-    float atenuation = calAtenuation(lights[0]);
-
-    colorPuntual = (ambient + (atenuation * (diffuse + specular)));
-
-    //direccional
-    vec4 vecLDir = calL(1);
-    vec4 vecHDir = calH(vecLDir,vecV);
-    float NHDir  = dot(normal,vecHDir);
-
-    vec4 ambientDir     = vec4(m.ambient * lights[1].ambient,1.0);
-    vec4 diffuseDir     = vec4(m.diffuse * lights[1].diffuse,1.0 ) * max(dot(vecLDir,normal),0.0f);
-    vec4 specularDir    = vec4(m.specular * lights[1].specular,1.0) * pow(max(NHDir,0.0f), m.shininess);
-    float atenuationDir = calAtenuation(lights[1]);
-
-    colorDireccional = (ambientDir + (atenuationDir * (diffuseDir + specularDir)));
 
     //si esta activa sumamos la contribucion de dicha luz al colorFinal
     //si no solo mostramos el ambiente global
-    if (lights[0].active == true)
+    if (lights[0].active == true){
+        //puntual
+        vec4 vecL = calL(0);
+        vec4 vecH = calH(vecL,vecV);
+        float NH  = dot(normal,vecH);
+
+        vec4 ambient     = vec4(m.ambient * lights[0].ambient,1.0);
+        vec4 diffuse     = vec4(m.diffuse * lights[0].diffuse,1.0 ) * max(dot(vecL,normal),0.0f);
+        vec4 specular    = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
+        float atenuation = calAtenuation(lights[0]);
+
+        colorPuntual = (ambient + (atenuation * (diffuse + specular)));
+
         colorFinal = colorPuntual;
-    else if(lights[1].active == true)
+    }
+
+    else if(lights[1].active == true){
+        //direccional
+        vec4 vecLDir = calL(1);
+        vec4 vecHDir = calH(vecLDir,vecV);
+        float NHDir  = dot(normal,vecHDir);
+
+        vec4 ambientDir     = vec4(m.ambient * lights[1].ambient,1.0);
+        vec4 diffuseDir     = vec4(m.diffuse * lights[1].diffuse,1.0 ) * max(dot(vecLDir,normal),0.0f);
+        vec4 specularDir    = vec4(m.specular * lights[1].specular,1.0) * pow(max(NHDir,0.0f), m.shininess);
+        float atenuationDir = calAtenuation(lights[1]);
+
+        colorDireccional = (ambientDir + (atenuationDir * (diffuseDir + specularDir)));
         colorFinal += colorDireccional ;
+    }
+
+
 
     return colorFinal;
 
@@ -120,13 +124,11 @@ vec4 calBlinnPhong(){
 
 void main()
 {
-    //gl_Position = vModProj * vModView *vPosition;
-    gl_Position = vPosition;
+    gl_Position = vModProj * vModView * vPosition;
 
     color = calBlinnPhong();
-    v_texcoord = vCoordTexture;//pasamos al fragmentShader
 
-    //color= vNormal;
+    fNormal = vNormal;
     //vec4 co = vec4(lights[1].diffuse.x,lights[1].diffuse.y,lights[1].diffuse.z, 1.0f);
 
 }

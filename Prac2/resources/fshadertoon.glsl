@@ -30,7 +30,8 @@ void main()
     float intensity;
     vec4 color;
 
-    vec4 directionLight = lights[0].position - fPosition;//vector que hay entre el pixel y la luz
+    vec4 directionLight = - lights[0].direction;//con la luz direccional
+    //es la direccion de la luz pero en inversa
 
     intensity = dot(normalize(directionLight) , normalize(fNormal));
 

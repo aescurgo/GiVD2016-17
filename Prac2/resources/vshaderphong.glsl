@@ -31,6 +31,9 @@ IN vec4 vNormal;
 uniform vec4 vOrigin;
 uniform vec3 vAmbientGlobal; //light ambienteGlobal
 
+uniform mat4 vModView;
+uniform mat4 vModProj;
+
 uniform Material m;
 uniform Light lights[2];
 
@@ -40,9 +43,10 @@ OUT vec4 fNormal;
 OUT vec4 fOrigin;
 
 
+
 void main()
 {
-    gl_Position = vPosition;
+    gl_Position = vModProj  * vModView * vPosition;
     fNormal = vNormal;
     fPosition = vPosition;
     fOrigin = vOrigin;

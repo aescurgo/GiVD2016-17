@@ -18,34 +18,23 @@ Scene::Scene() {
      * [2] -> spot
      */
 
-    Light *puntual = new Light(Puntual);
-    puntual->setDiffuseIntensity(vec3(1.0,0.5,0.5));
-    puntual->setIa(vec3(0.4,0.4,0.4));
-    puntual->setIs(vec3(1.0,1.0,1.0));
-    puntual->setLightPosition(vec4(2.0,2.0,2.0,1.0));
-    puntual->setCoeficients(vec3(0.0,0.0,0.8));
-    puntual->setEstaActivat(true);
 
-    Light *direccional = new Light(Direccional);
-    direccional->setDiffuseIntensity(vec3(1.0,0.5,0.5));
-    direccional->setIa(vec3(0.4,0.4,0.4));
-    direccional->setIs(vec3(1.0,1.0,1.0));
-    direccional->setLightPosition(vec4(4.0,4.0,4.0,1.0));
-    direccional->setCoeficients(vec3(0.5,0.5,0.5));
-    direccional->setEstaActivat(true);
+
+
+
 
     Light *spot = new Light(Spot);
     spot->setDiffuseIntensity(vec3(1.0,0.5,0.5));
     spot->setIa(vec3(0.4,0.4,0.4));
     spot->setIs(vec3(1.0,1.0,1.0));
     spot->setLightPosition(vec4(4.0,4.0,4.0,1.0));
-    spot->setDirection(-vec4(4.0,4.0,4.0,1.0));
+    spot->setDirection(vec4(4.0,4.0,4.0,1.0));
     spot->setCoeficients(vec3(0.5,0.5,0.5));
-    spot->setEstaActivat(true);
+    spot->setEstaActivat(false);
 
-    this->addLight(puntual);
-    this->addLight(direccional);
-    this->addLight(spot);
+    //this->addLight(puntual);
+    //this->addLight(direccional);
+    //this->addLight(spot);
 
 }
 
@@ -79,6 +68,7 @@ void Scene::draw() {
  * @brief Scene::drawTexture
  */
 void Scene::drawTexture() {
+
     for(unsigned int i=0; i < elements.size(); i++){
         elements.at(i)->drawTexture();
     }
@@ -88,10 +78,11 @@ void Scene::drawTexture() {
  * @brief Scene::getLightActual
  * @return
  */
-Light* Scene::getLightActual() {
+Light* Scene::getLightActual(int i) {
     // TO DO OPCIONAL: A modificar si es vol canviar el comportament de la GUI
     // Ara per ara dona com a Light actual la darrera que s'ha inserit
-    return (lights[lights.size()-1]);
+    //return (lights[lights.size()-1]);
+    return (lights[i]);
 }
 
 /**

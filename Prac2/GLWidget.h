@@ -20,6 +20,7 @@ class GLWidget : public QGLWidget
 public:
     GLWidget(QWidget *parent = 0);
     ~GLWidget();
+    int typeL = 0;//para controlar que tipo de luz es la actual
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
@@ -72,8 +73,8 @@ private:
 
     void initShader(const char* vertexShaderFile, const char* fragmentShaderFile);
     void initShadersGPU();
-    void updateShader();
-    void updateShaderTexture();
+    void updateShader(const char* vertexShaderFile, const char* fragmentShaderFile);
+    void updateShaderTexture(const char* vertexShaderFile, const char* fragmentShaderFile);
 };
 
 #endif // GLWIDGET_H

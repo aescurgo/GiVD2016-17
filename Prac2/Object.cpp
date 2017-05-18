@@ -55,10 +55,13 @@ void Object::toGPU(QGLShaderProgram *pr) {
     glGenBuffers( 1, &buffer );
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
-    //mod el tamaño del buffer para poder pasar tambien las coordTexture
-    glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index +sizeof(vec2)*Index, NULL, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, NULL, GL_STATIC_DRAW );
     glEnable( GL_DEPTH_TEST );
-    glEnable(GL_TEXTURE_2D); //para la texture
+
+    //remporal
+    //glEnable(GL_TEXTURE_2D);
+
+    program->bind();//add
 
 }
 
@@ -70,6 +73,8 @@ void Object::toGPU(QGLShaderProgram *pr) {
 void Object::draw(){
     // TO  DO: A modificar a la fase 1 de la practica 2
     // Cal passar les normals a la GPU
+
+
 
     // Aqui es torna a repetir el pas de dades a la GPU per si hi ha més d'un objecte
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
@@ -91,8 +96,17 @@ void Object::draw(){
     program->enableAttributeArray(normalLocation);
     program->setAttributeBuffer("vNormal", GL_FLOAT, sizeof(point4)*Index, 4);
 
+
+
+    //remporal
+    //texture->bind(0);
+    //program->setUniformValue("texMap", 0);
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays( GL_TRIANGLES, 0, Index );
+
+
+    //
 
     this->material->toGPU(program);
 }
@@ -104,9 +118,6 @@ void Object::make(){
 
     // TO  DO: A modificar a la fase 1 de la practica 2
     // Cal calcular la normal a cada vertex a la CPU
-
-    //inicializamos las texturas
-    //initTextura();
 
     static vec3  base_colors[] = {
         vec3( 1.0, 0.0, 0.0 ),
@@ -142,9 +153,15 @@ void Object::toGPUTexture(QGLShaderProgram *pr) {
 
 // TO DO: Cal implementar en la fase 2 de la practica 2
 // S'ha d'activar la textura i es passa a la GPU
+    program->setUniformValue("texMap", 0);
+    glGenBuffers( 1, &buffer );
+    glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
-    //lo he añadido al toGPU principal
-    //se modifica el tamaño del buffer
+    glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, NULL, GL_STATIC_DRAW );
+    glEnable( GL_DEPTH_TEST );
+    glEnable(GL_TEXTURE_2D); //para la texture
+
+
 
 }
 
@@ -155,23 +172,38 @@ void Object::toGPUTexture(QGLShaderProgram *pr) {
  */
 void Object::drawTexture(){
 
-    // TO DO: Cal implementar en la fase 2 de la practica 2
-    // S'ha d'activar la textura i es passa a la GPU
+    initTextura();//inicializamos las texturas
+    //activamos las texturas
+    //pero tambien pasamos todo el buffer
 
-    // Aqui es torna a repetir el pas de dades a la GPU per si hi ha més d'un objecte
+    texture->bind(0);
+    program->setUniformValue("texMap", 0);
+
+    glEnable(GL_TEXTURE_2D);
+
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
-    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, sizeof(vec2)*Index, &verTexture[0] );//pasamos las txture a la gpu por el buffer
+    glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4)*Index, &points[0] );
+    //glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &colors[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*Index, sizeof(point4)*Index, &normals[0] );//pasamos las normales a la gpu por el buffer
 
+    int vertexLocation = program->attributeLocation("vPosition");
+    //int colorLocation = program->attributeLocation("vColor");
+    int normalLocation = program->attributeLocation("vNormal");
 
-    int textureLocation = program->attributeLocation("vCoordTexture");
+    program->enableAttributeArray(vertexLocation);
+    program->setAttributeBuffer("vPosition", GL_FLOAT, 0, 4);
 
+    //program->enableAttributeArray(colorLocation);
+    //program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4)*Index, 4);
 
-    program->enableAttributeArray(textureLocation);
-    program->setAttributeBuffer("vCoordTexture", GL_FLOAT, sizeof(point4)*Index +  sizeof(point4)*Index, 2);
+    program->enableAttributeArray(normalLocation);
+    program->setAttributeBuffer("vNormal", GL_FLOAT, sizeof(point4)*Index, 4);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays( GL_TRIANGLES, 0, Index );
+
+    this->material->toGPU(program);
 
 }
 

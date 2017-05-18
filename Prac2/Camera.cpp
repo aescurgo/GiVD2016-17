@@ -142,11 +142,9 @@ void Camera::toGPU(QGLShaderProgram *program)
     glUniform4fv(gl_Origin.origin, 1, origin );
 
     //passing model view & projection to GPU
-    model_view = program->uniformLocation("vModView");
-    glUniformMatrix4fv(model_view,1,GL_TRUE,modView);
+    setModelView(program, modView);
+    setProjection(program,proj);
 
-    projection = program->uniformLocation("vModProj");
-    glUniformMatrix4fv(model_view,1,GL_TRUE,proj);
 
 
 }
@@ -162,7 +160,7 @@ void Camera::setModelView(QGLShaderProgram *program, mat4 m)
 void Camera::setProjection(QGLShaderProgram *program, mat4 p)
 {
     projection = program->uniformLocation("vModProj");
-    glUniformMatrix4fv(model_view,1,GL_TRUE,p);
+    glUniformMatrix4fv(projection,1,GL_TRUE,p);
 
     // TO DO: A implementar a la fase 2 de la practica 2
 }

@@ -21,33 +21,30 @@ void GLWidget::activaToonShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Toon"<<endl;
 
-    initShader("://resources/vshadertoon.glsl", "://resources/fshadertoon.glsl");
-    program->link();
-    program->bind();
+    updateShader("://resources/vshadertoon.glsl", "://resources/fshadertoon.glsl");
 
-    updateGL();
 
 }
 
 void GLWidget::activaPhongShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Phong"<<endl;
-    initShader("://resources/vshaderphong.glsl", "://resources/fshaderphong.glsl");
-    program->link();
-    program->bind();
+    updateShader("://resources/vshaderphong.glsl", "://resources/fshaderphong.glsl");
+    //program->link();
+    //program->bind();
 
-    updateGL();
+    //updateGL();
 
 }
 
 void GLWidget::activaGouraudShader() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Gouraud"<<endl;
-    initShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraud.glsl");
-    program->link();
-    program->bind();
+    updateShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraud.glsl");
+    //program->link();
+    //program->bind();
 
-    updateGL();
+    //updateGL();
 
 }
 
@@ -58,21 +55,45 @@ void GLWidget::activaPhongTex() {
 
 void GLWidget::activaGouraudTex() {
     //A implementar a la fase 1 de la practica 2
-
-    this->updateShaderTexture();
+    //scene->drawTexture();
+    updateShaderTexture("://resources/vshadergouraud.glsl", "://resources/fshadergouraudTexture.glsl");
+    //this->updateShaderTexture();
 }
 
 //Metode  per canviar de shaders.
-void GLWidget::updateShader(){
+void GLWidget::updateShader(const char* vertexShaderFile, const char* fragmentShaderFile){
     //A implementar a la fase 1 de la practica 2
+    QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
+    QGLShader *fshader = new QGLShader(QGLShader::Fragment, this);
+
+    vshader->compileSourceFile(vertexShaderFile);
+    fshader->compileSourceFile(fragmentShaderFile);
+
+    program = new QGLShaderProgram(this);
+    program->addShader(vshader);
+    program->addShader(fshader);
+    program->link();
+    program->bind();
+
+    updateGL();
 
 }
 
 //Metode per canviar de shaders de textures
-void GLWidget::updateShaderTexture(){
+void GLWidget::updateShaderTexture(const char* vertexShaderFile, const char* fragmentShaderFile){
     //A implementar a la fase 1 de la practica 2
+    scene->drawTexture();//aqui llamamos a este metodo para inicializar las teturas y luego para cada objeto
+    //hacer el draw
 
-    initShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraudTexture.glsl");
+    QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
+    QGLShader *fshader = new QGLShader(QGLShader::Fragment, this);
+
+    vshader->compileSourceFile(vertexShaderFile);
+    fshader->compileSourceFile(fragmentShaderFile);
+
+    program = new QGLShaderProgram(this);
+    program->addShader(vshader);
+    program->addShader(fshader);
     program->link();
     program->bind();
 
@@ -84,7 +105,7 @@ void GLWidget::ensenyaMenuLight0() {
     // De fet el metode showAuxWindowPuntualLight té com a parametre la llum a mostrar en el widget.
     // Es podria cridar diverses vegades.
     if (scene->lights.size()>0)
-        showAuxWindowPuntualLight(scene->getLightActual());
+        showAuxWindowPuntualLight(scene->getLightActual(this->typeL));//default puntual light
 }
 
 // Per a les llums: com afegir-les
@@ -92,67 +113,91 @@ void GLWidget::changePositionLight() {
     // TO DO: cal modificar en la fase 1 de la practica 2
     // Des d'quest mètode s'AFEGEIX una nova llum
     // tipus rep el tipus de llum que es vol afegir. Des d'aqui s'afegeix la llum a l'escena
-    scene->getLightActual()->setTipusLight(Puntual);
+    this->typeL = 0;
+    scene->getLightActual(this->typeL)->setTipusLight(Puntual);
+    scene->lightsToGPU(program);
     updateGL();
+
+    cout << "Change light to Puntual" << endl;
 
 }
 void GLWidget::changeDirectionalLight() {
     // tipus rep el tipus de llum que es vol afegir. Des d'aqui s'afegeix la llum a l'escena.
     // TO DO: cal modificar en la fase 1 de la practica 2
     // Des d'quest mètode s'AFEGEIX una nova llum
-    scene->getLightActual()->setTipusLight(Direccional);
+    //scene->getLightActual(1)->setTipusLight(Direccional);
+
+    this->typeL = 1;
+    Light *direccional = new Light(Direccional);
+    direccional->setDiffuseIntensity(vec3(1.0,0.5,0.5));
+    direccional->setIa(vec3(0.2,0.2,0.2));
+    direccional->setIs(vec3(1.0,1.0,1.0));
+    direccional->setLightPosition(vec4(4.0,4.0,4.0,1.0));
+    direccional->setCoeficients(vec3(0.0,0.0,0.5));
+    direccional->setEstaActivat(true);
+
+    scene->addLight(direccional);
+    scene->lightsToGPU(program);
     updateGL();
+
+    cout << "Change light to Direccional" << endl;
 
 }
 void GLWidget::changeSpotLight() {
     // tipus rep el tipus de llum que es vol afegir. Des d'aqui s'afegeix la llum a l'escena.
     // TO DO: cal modificar en la fase 1 de la practica 2
     // Des d'quest mètode s'AFEGEIX una nova llum
-    scene->getLightActual()->setTipusLight(Spot);
+    scene->getLightActual(2)->setTipusLight(Spot);
     updateGL();
 
 }
 void GLWidget::updateXPositionLight(int xposition) {
     // S'ha de modificar la posicio x de la llum activa
-    vec4 v = scene->getLightActual()->getLightPosition();
+    vec4 v = scene->getLightActual(this->typeL)->getLightPosition();
     v[0] = (float)xposition;
-    scene->getLightActual()->setLightPosition(v);
+    scene->getLightActual(this->typeL)->setLightPosition(v);
+    scene->lightsToGPU(program);
     updateGL();
 }
 
 void GLWidget::updateYPositionLight(int yposition) {
     // S'ha de modificar la posicio y de la llum activa
-    vec4 v = scene->getLightActual()->getLightPosition();
+    vec4 v = scene->getLightActual(this->typeL)->getLightPosition();
     v[1] = (float)yposition;
-    scene->getLightActual()->setLightPosition(v);
+    scene->getLightActual(this->typeL)->setLightPosition(v);
+    scene->lightsToGPU(program);
     updateGL();
 }
 
 void GLWidget::updateZPositionLight(int zposition) {
     // S'ha de modificar la posicio z de la llum activa
-    vec4 v = scene->getLightActual()->getLightPosition();
+    vec4 v = scene->getLightActual(this->typeL)->getLightPosition();
     v[2] = (float)zposition;
-    scene->getLightActual()->setLightPosition(v);
+    scene->getLightActual(this->typeL)->setLightPosition(v);
+    scene->lightsToGPU(program);
     updateGL();
 }
 
 void GLWidget::updateLightIntensity(int intens) {
     // S'ha de modificar la intensitat de la llum 0. es podria canviar per la llum actual
     vec3 intensitat;
-    intensitat =  scene->getLightActual()->getDiffuseIntensity();
+    intensitat =  scene->getLightActual(this->typeL)->getDiffuseIntensity();
     intensitat[0] = intens/200.0;
     intensitat[1] = intens/200.0;
     intensitat[2] = intens/200.0; // el 200 es l'escala del scrollbar
 
-    scene->getLightActual()->setDiffuseIntensity(intensitat);
+    scene->getLightActual(this->typeL)->setDiffuseIntensity(intensitat);
+    scene->lightsToGPU(program);
     updateGL();
+
+
 }
 
 void GLWidget::activateLight(){
-    scene->getLightActual()->switchOnOff();
+    scene->getLightActual(this->typeL)->switchOnOff();
     scene->lightsToGPU(program);
 
-    activaGouraudShader();
+    //activaGouraudShader();
     updateGL();
 }
 
@@ -260,7 +305,9 @@ void GLWidget::initShader(const char* vShaderFile, const char* fShaderFile){
  * @brief GLWidget::initShadersGPU
  */
 void GLWidget::initShadersGPU(){
-    initShader("://resources/vshader1.glsl", "://resources/fshader1.glsl");
+    //inicializamos los shaders con GOURAUD
+    initShader("://resources/vshadergouraud.glsl", "://resources/fshadergouraud.glsl");
+    cout << "first GOURAUD" <<endl;
 }
 
 QSize GLWidget::minimumSizeHint() const {
@@ -280,10 +327,15 @@ void GLWidget::initializeGL() {
     initShadersGPU();
 
     // Creacio d'una Light per apoder modificar el seus valors amb la interficie
-    /*Light *l = new Light(Puntual);
-    l->setDiffuseIntensity(vec3(0.0,1.0,0.0));
-    scene->addLight(l);*/
-    //laz luces las añadido en la construtora de Scene
+    Light *puntual = new Light(Puntual);
+    puntual->setDiffuseIntensity(vec3(1.0,0.5,0.5));
+    puntual->setIa(vec3(0.4,0.4,0.4));
+    puntual->setIs(vec3(1.0,1.0,1.0));
+    puntual->setLightPosition(vec4(2.0,2.0,2.0,1.0));
+    puntual->setCoeficients(vec3(0.0,0.0,0.8));
+    puntual->setDirection(vec4(2.0,2.0,2.0,1.0));//para testear el toonShading
+    puntual->setEstaActivat(true);
+    scene->addLight(puntual);
 
     //cout << "first initGL" <<endl;
 

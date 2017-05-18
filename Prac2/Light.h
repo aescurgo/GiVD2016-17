@@ -33,6 +33,7 @@ class Light {
         GLfloat alpha;
         vec3 coef;
         bool active;//gestiona si esta activa o no la luz
+        LightType type;
 
         vec4 getLightPosition();
         void setLightPosition(vec4 v);

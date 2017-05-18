@@ -39,7 +39,7 @@ public:
     void drawTexture();
 
     void   addLight(Light *l);
-    Light *getLightActual();
+    Light *getLightActual(int i);//pasamos que luz estamos en este momento
     void   setLightActual(Light* l);
 
     void lightsToGPU(QGLShaderProgram *program);

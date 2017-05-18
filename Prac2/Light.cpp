@@ -63,7 +63,7 @@ void Light::switchOnOff() {
     // TO DO: A canviar a la fase 1 de la practica 2
     // Si esta en on la posa a off i a l'inreves
 
-    this->active = !active;//si esta active la desactivamos y viceversa
+    this->active = !this->active;//si esta active la desactivamos y viceversa
  }
 
 /**
@@ -175,4 +175,5 @@ LightType Light::getTipusLight() const
 void Light::setTipusLight(const LightType &value)
 {
     // TO DO: A canviar a la fase 1 de la practica 2
+    this->type = value;
 }
