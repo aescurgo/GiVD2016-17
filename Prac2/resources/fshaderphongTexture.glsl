@@ -5,11 +5,14 @@
 #define IN in
 #define OUT out
 #endif
+#define PI 3.1415926535
 
 //IN vec4 color;
 IN vec4 fPosition;
 IN vec4 fNormal;
 IN vec4 fOrigin;
+
+uniform sampler2D texMap; //recibimos la textura
 
 struct Material{
     vec3 diffuse;
@@ -117,10 +120,18 @@ vec4 calBlinnPhong(){
 
 }
 
+vec2 calCoordTexture(){
 
+    float u = 0.5 - atan(fNormal.z, fNormal.x) / (2.0 * PI);
+    float v = 0.5 - asin(fNormal.y) / PI;
+
+    return vec2(u,v);
+}
 
 void main()
 {
-    gl_FragColor = calBlinnPhong();
+    vec2 v_texcoord = calCoordTexture();
+    vec4 color = calBlinnPhong();
+    gl_FragColor = 0.25 * color + 0.75 * texture2D(texMap, v_texcoord);
 }
 

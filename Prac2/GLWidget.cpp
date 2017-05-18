@@ -51,6 +51,8 @@ void GLWidget::activaGouraudShader() {
 void GLWidget::activaPhongTex() {
     //A implementar a la fase 1 de la practica 2
     cout<<"Estic a Phong Tex"<<endl;
+    updateShaderTexture("://resources/vshaderphong.glsl", "://resources/fshaderphongTexture.glsl");
+
 }
 
 void GLWidget::activaGouraudTex() {
