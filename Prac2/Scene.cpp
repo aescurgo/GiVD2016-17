@@ -9,7 +9,7 @@ Scene::Scene() {
     capsaMinima.a = 2;
     capsaMinima.h = 2;
     capsaMinima.p = 2;
-    lightAmbientGlobal = vec3(0.01, 0.01, 0.01);
+    lightAmbientGlobal = vec3(0.5, 0.1, 0.1);
 
     //adding light
     /*
@@ -18,11 +18,7 @@ Scene::Scene() {
      * [2] -> spot
      */
 
-
-
-
-
-
+/*
     Light *spot = new Light(Spot);
     spot->setDiffuseIntensity(vec3(1.0,0.5,0.5));
     spot->setIa(vec3(0.4,0.4,0.4));
@@ -30,12 +26,7 @@ Scene::Scene() {
     spot->setLightPosition(vec4(4.0,4.0,4.0,1.0));
     spot->setDirection(vec4(4.0,4.0,4.0,1.0));
     spot->setCoeficients(vec3(0.5,0.5,0.5));
-    spot->setEstaActivat(false);
-
-    //this->addLight(puntual);
-    //this->addLight(direccional);
-    //this->addLight(spot);
-
+    spot->setEstaActivat(false);*/
 }
 
 /**

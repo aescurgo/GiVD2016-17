@@ -3,10 +3,11 @@
 
 Material::Material() {
 
-    this->diffuse   = vec3(0.5, 0.5, 0.5);
+    this->diffuse   = vec3(0.8, 0.3, 0.0);
     this->ambient   = vec3(0.2,0.2,0.2);
     this->specular  = vec3(1.0,1.0,1.0);
     this->shininess = 10.0;
+
 
 }
 

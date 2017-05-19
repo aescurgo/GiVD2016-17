@@ -40,7 +40,7 @@ Object::Object(int npoints, QString n) : numPoints(npoints){
 Object::~Object(){
     delete points;
     delete normals;
-    delete colors;
+    //delete colors;
 }
 
 /**
@@ -119,18 +119,18 @@ void Object::make(){
     // TO  DO: A modificar a la fase 1 de la practica 2
     // Cal calcular la normal a cada vertex a la CPU
 
-    static vec3  base_colors[] = {
+    /*static vec3  base_colors[] = {
         vec3( 1.0, 0.0, 0.0 ),
         vec3( 0.0, 1.0, 0.0 ),
         vec3( 0.0, 0.0, 1.0 ),
         vec3( 1.0, 1.0, 0.0 )
-    };
+    };*/
 
     Index = 0;
     for(unsigned int i=0; i<cares.size(); i++){
         for(unsigned int j=0; j<cares[i].idxVertices.size(); j++){
             points[Index] = vertexs[cares[i].idxVertices[j]];
-            colors[Index] = vec4(base_colors[j%4], 1.0);
+            //colors[Index] = vec4(base_colors[j%4], 1.0);
             normals[Index] = allNormals[cares[i].idxVertices[j]]; //also add normals with the same dimensions like points.
 
             Index++;

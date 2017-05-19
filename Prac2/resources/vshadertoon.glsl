@@ -7,7 +7,7 @@
 #endif
 
 
-//method interpolacion color
+//method normal
 
 
 struct Light{
@@ -21,6 +21,9 @@ struct Light{
     vec3 coef;//atenuacion
 };
 
+uniform mat4 vModView;
+uniform mat4 vModProj;
+
 IN vec4 vNormal;
 IN vec4 vPosition;
 OUT vec4 fNormal;
@@ -29,7 +32,7 @@ OUT vec4 fPosition;
 
 void main()
 {
-    gl_Position = vPosition;
+    gl_Position = vModProj * vModView * vPosition;
     fNormal = vNormal;
     fPosition = vPosition;
 }

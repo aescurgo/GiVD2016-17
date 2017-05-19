@@ -95,7 +95,7 @@ vec4 calBlinnPhong(){
         vec4 specular    = vec4(m.specular * lights[0].specular,1.0) * pow(max(NH,0.0f), m.shininess);
         float atenuation = calAtenuation(lights[0]);
 
-        colorPuntual = (ambient + (atenuation * (diffuse + specular)));
+        colorPuntual = atenuation * (ambient + diffuse + specular);
 
         colorFinal = colorPuntual;
     }
@@ -111,11 +111,9 @@ vec4 calBlinnPhong(){
         vec4 specularDir    = vec4(m.specular * lights[1].specular,1.0) * pow(max(NHDir,0.0f), m.shininess);
         float atenuationDir = calAtenuation(lights[1]);
 
-        colorDireccional = (ambientDir + (atenuationDir * (diffuseDir + specularDir)));
+        colorDireccional = atenuationDir * (ambientDir + diffuseDir + specularDir);
         colorFinal += colorDireccional ;
     }
-
-
 
     return colorFinal;
 

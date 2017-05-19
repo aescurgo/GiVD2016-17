@@ -138,8 +138,8 @@ void Camera::toGPU(QGLShaderProgram *program)
     // a la fase 2 de la practica 2
 
     gl_Origin.origin = program->uniformLocation("vOrigin");
-
     glUniform4fv(gl_Origin.origin, 1, origin );
+
 
     //passing model view & projection to GPU
     setModelView(program, modView);

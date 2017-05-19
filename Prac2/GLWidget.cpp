@@ -246,6 +246,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     lastPos = event->pos();
+    camera->toGPU(program);
+    updateGL();
 }
 
 
@@ -335,7 +337,7 @@ void GLWidget::initializeGL() {
     puntual->setIs(vec3(1.0,1.0,1.0));
     puntual->setLightPosition(vec4(2.0,2.0,2.0,1.0));
     puntual->setCoeficients(vec3(0.0,0.0,0.8));
-    puntual->setDirection(vec4(2.0,2.0,2.0,1.0));//para testear el toonShading
+    puntual->setDirection(- vec4(0.0,0.0,10.0,1.0));//para testear el toonShading
     puntual->setEstaActivat(true);
     scene->addLight(puntual);
 
