@@ -65,6 +65,15 @@ void Scene::drawTexture() {
     }
 }
 
+void Scene::setAlphaObject(float alpha) {
+
+    for(unsigned int i=0; i < elements.size(); i++){
+        elements.at(i)->material->setAlpha(alpha);
+    }
+}
+
+
+
 /**
  * @brief Scene::getLightActual
  * @return

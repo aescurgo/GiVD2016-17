@@ -32,8 +32,7 @@ protected:
     // Els colors s'usen en la primera execució però després son prescindibles
     point4 *colors;
 
-    //material
-    Material *material;
+
 
     int Index; // index de control del numero de vertexs a passar a la GPU
 
@@ -43,7 +42,8 @@ protected:
     QGLShaderProgram *program;
 
 public:
-
+    //material
+    Material *material;
     Object(const int npoints, QObject *parent = 0);
     Object(const int npoints, QString n);
     ~Object();

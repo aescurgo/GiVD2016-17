@@ -21,6 +21,10 @@ Material::Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess, f
 
 }
 
+void Material::setAlpha(float a){
+    this->alpha = a;
+}
+
 /**
  * Passa el material de CPU a GPU
  * @brief Material::toGPU

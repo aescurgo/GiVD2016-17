@@ -15,6 +15,22 @@ GLWidget::~GLWidget() {
     delete scene;
 }
 
+void GLWidget::activaAlpha1() {
+    cout<<"Material: alpha 1"<<endl;
+    scene->setAlphaObject(1.0);
+    updateGL();
+}
+void GLWidget::activaAlpha075() {
+    cout<<"Material: alpha 0.50"<<endl;
+    scene->setAlphaObject(0.50);
+    updateGL();
+}
+void GLWidget::activaAlpha050() {
+    cout<<"Material: alpha 0.25"<<endl;
+    scene->setAlphaObject(0.25);
+    updateGL();
+}
+
 // Metodes que es criden des dels menús
 
 void GLWidget::activaToonShader() {
@@ -65,6 +81,7 @@ void GLWidget::activaGouraudTex() {
 //Metode  per canviar de shaders.
 void GLWidget::updateShader(const char* vertexShaderFile, const char* fragmentShaderFile){
     //A implementar a la fase 1 de la practica 2
+    //program->removeAllShaders();
     QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
     QGLShader *fshader = new QGLShader(QGLShader::Fragment, this);
 
@@ -72,6 +89,7 @@ void GLWidget::updateShader(const char* vertexShaderFile, const char* fragmentSh
     fshader->compileSourceFile(fragmentShaderFile);
 
     program = new QGLShaderProgram(this);
+    program->removeAllShaders();
     program->addShader(vshader);
     program->addShader(fshader);
     program->link();
@@ -84,6 +102,7 @@ void GLWidget::updateShader(const char* vertexShaderFile, const char* fragmentSh
 //Metode per canviar de shaders de textures
 void GLWidget::updateShaderTexture(const char* vertexShaderFile, const char* fragmentShaderFile){
     //A implementar a la fase 1 de la practica 2
+    program = new QGLShaderProgram(this);
 
     scene->drawTexture();//aqui llamamos a este metodo para inicializar las teturas y luego para cada objeto
     //hacer el draw
@@ -93,8 +112,9 @@ void GLWidget::updateShaderTexture(const char* vertexShaderFile, const char* fra
 
     vshader->compileSourceFile(vertexShaderFile);
     fshader->compileSourceFile(fragmentShaderFile);
+    program->removeAllShaders();
 
-    program = new QGLShaderProgram(this);
+
     program->addShader(vshader);
     program->addShader(fshader);
     program->link();

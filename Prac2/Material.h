@@ -29,6 +29,7 @@ public:
     vec3 specular;
     float shininess;
     float alpha;
+    void setAlpha(float a);
 
     void toGPU(QGLShaderProgram *program);
 

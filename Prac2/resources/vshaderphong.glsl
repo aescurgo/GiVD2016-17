@@ -11,6 +11,7 @@ struct Material{
     vec3 ambient;
     vec3 specular;
     float shininess;
+    float alpha;
 };
 
 struct Light{

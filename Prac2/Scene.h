@@ -37,6 +37,7 @@ public:
 
     void draw();
     void drawTexture();
+    void setAlphaObject(float alpha);
 
     void   addLight(Light *l);
     Light *getLightActual(int i);//pasamos que luz estamos en este momento

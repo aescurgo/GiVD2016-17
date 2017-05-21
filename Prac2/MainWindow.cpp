@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this->ui->action_bump_mapping, SIGNAL(triggered()), glWidget, SLOT(activaBumpMapping()));
     connect(this->ui->action_environmental_mapping, SIGNAL(triggered()), glWidget, SLOT(activaEnvMapping()));
     connect(this->ui->action_afegeix_llum_puntual, SIGNAL(triggered()), glWidget, SLOT(ensenyaMenuLight0()));
+    connect(this->ui->action1_0, SIGNAL(triggered()), glWidget, SLOT(activaAlpha1()));
+    connect(this->ui->action0_75, SIGNAL(triggered()), glWidget, SLOT(activaAlpha075()));
+    connect(this->ui->action0_50, SIGNAL(triggered()), glWidget, SLOT(activaAlpha050()));
 
 }
 MainWindow::~MainWindow()
