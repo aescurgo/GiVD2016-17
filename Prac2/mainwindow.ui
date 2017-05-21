@@ -158,12 +158,12 @@
   </action>
   <action name="action0_75">
    <property name="text">
-    <string>0.75</string>
+    <string>0.50</string>
    </property>
   </action>
   <action name="action0_50">
    <property name="text">
-    <string>0.50</string>
+    <string>0.25</string>
    </property>
   </action>
  </widget>

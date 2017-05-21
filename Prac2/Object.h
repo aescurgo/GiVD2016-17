@@ -37,6 +37,7 @@ protected:
     int Index; // index de control del numero de vertexs a passar a la GPU
 
     QOpenGLTexture *texture;
+    QOpenGLTexture *texture1;//para utilizar la textura Normal
 
 
     QGLShaderProgram *program;

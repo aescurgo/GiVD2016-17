@@ -154,12 +154,15 @@ void Object::toGPUTexture(QGLShaderProgram *pr) {
 // TO DO: Cal implementar en la fase 2 de la practica 2
 // S'ha d'activar la textura i es passa a la GPU
     program->setUniformValue("texMap", 0);
+    program->setUniformValue("texMap1", 1);
     glGenBuffers( 1, &buffer );
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
     glBufferData( GL_ARRAY_BUFFER, sizeof(point4)*Index + sizeof(point4)*Index, NULL, GL_STATIC_DRAW );
     glEnable( GL_DEPTH_TEST );
     glEnable(GL_TEXTURE_2D); //para la texture
+
+    program->bind();
 
 
 
@@ -178,6 +181,10 @@ void Object::drawTexture(){
 
     texture->bind(0);
     program->setUniformValue("texMap", 0);
+
+    //activamos tambien la textura de las normales
+    texture->bind(1);
+    program->setUniformValue("texMap1", 1);
 
     glEnable(GL_TEXTURE_2D);
 
@@ -225,6 +232,14 @@ void Object::initTextura()
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
 
     texture->bind(0);
+
+    // Carregar la textura de normales
+    glActiveTexture(GL_TEXTURE1);
+    texture1 = new QOpenGLTexture(QImage("://resources/textures/earth3.png"));
+    texture1->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    texture1->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    texture1->bind(1);
 
  }
 

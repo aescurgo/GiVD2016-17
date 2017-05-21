@@ -13,6 +13,7 @@ IN vec4 fNormal;
 IN vec4 fOrigin;
 
 uniform sampler2D texMap; //recibimos la textura
+uniform sampler2D texMap1;
 
 struct Material{
     vec3 diffuse;
@@ -133,6 +134,6 @@ void main()
 {
     vec2 v_texcoord = calCoordTexture();
     vec4 color = calBlinnPhong();
-    gl_FragColor = 0.25 * color + 0.75 * texture2D(texMap, v_texcoord);
+    gl_FragColor = 0.75 * texture2D(texMap, v_texcoord);
 }
 

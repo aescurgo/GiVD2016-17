@@ -12,6 +12,7 @@ IN vec4 fNormal;
 
 uniform sampler2D texMap;
 
+
 vec2 calCoordTexture(){
 
     float u = 0.5 - atan(fNormal.z, fNormal.x) / (2.0 * PI);
