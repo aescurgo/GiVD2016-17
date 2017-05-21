@@ -11,6 +11,7 @@ struct Material{
     vec3 ambient;
     vec3 specular;
     float shininess;
+    float alpha;
 };
 
 struct Light{
@@ -115,7 +116,7 @@ vec4 calBlinnPhong(){
         colorFinal += colorDireccional ;
     }
 
-    return colorFinal;
+    return vec4(colorFinal.x,colorFinal.y,colorFinal.z, m.alpha);
 
 }
 

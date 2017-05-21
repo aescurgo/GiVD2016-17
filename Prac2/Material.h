@@ -13,6 +13,7 @@ struct gl_Material
     GLuint ambient;
     GLuint specular;
     GLuint shininess;
+    GLuint alpha;
 
 };
 
@@ -21,12 +22,13 @@ class Material {
 
 public:
     Material();
-    Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess);
+    Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess, float alpha);
     ~Material();
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
     float shininess;
+    float alpha;
 
     void toGPU(QGLShaderProgram *program);
 

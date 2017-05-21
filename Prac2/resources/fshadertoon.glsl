@@ -30,10 +30,10 @@ void main()
     float intensity;
     vec4 color;
 
-    vec4 directionLight = - lights[0].direction;//con la luz direccional
+    vec4 directionLight = -lights[0].direction;//con la luz direccional
     //es la direccion de la luz pero en inversa
 
-    intensity = dot(normalize(directionLight) , normalize(fNormal));
+    intensity = dot((directionLight) , (fNormal));
 
     if(intensity > 0.95) color = vec4(1.0,0.5,0.5,1.0);
     else if(intensity > 0.5) color = vec4(0.6,0.3,0.3,1.0);

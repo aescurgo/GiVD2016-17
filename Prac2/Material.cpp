@@ -7,15 +7,17 @@ Material::Material() {
     this->ambient   = vec3(0.2,0.2,0.2);
     this->specular  = vec3(1.0,1.0,1.0);
     this->shininess = 10.0;
+    this->alpha     = 1.0;
 
 
 }
 
-Material::Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess){
+Material::Material(vec3 diffuse, vec3 ambient, vec3 specular, float shininess, float alpha){
     this->diffuse   = diffuse;
     this->ambient   = ambient;
     this->specular  = specular;
     this->shininess = shininess;
+    this->alpha     = alpha;
 
 }
 
@@ -31,10 +33,12 @@ void Material::toGPU(QGLShaderProgram *program){
     mate.ambient = program->uniformLocation("m.ambient");
     mate.specular = program->uniformLocation("m.specular");
     mate.shininess = program->uniformLocation("m.shininess");
+    mate.alpha = program->uniformLocation("m.alpha");
 
     glUniform3fv(mate.diffuse,1,this->diffuse);
     glUniform3fv(mate.ambient,1,this->ambient);
     glUniform3fv(mate.specular,1,this->specular);
     glUniform1f(mate.shininess,this->shininess);
+    glUniform1f(mate.alpha,this->alpha);
 
 }

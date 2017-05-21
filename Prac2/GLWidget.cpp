@@ -84,6 +84,7 @@ void GLWidget::updateShader(const char* vertexShaderFile, const char* fragmentSh
 //Metode per canviar de shaders de textures
 void GLWidget::updateShaderTexture(const char* vertexShaderFile, const char* fragmentShaderFile){
     //A implementar a la fase 1 de la practica 2
+
     scene->drawTexture();//aqui llamamos a este metodo para inicializar las teturas y luego para cada objeto
     //hacer el draw
 
@@ -198,8 +199,6 @@ void GLWidget::updateLightIntensity(int intens) {
 void GLWidget::activateLight(){
     scene->getLightActual(this->typeL)->switchOnOff();
     scene->lightsToGPU(program);
-
-    //activaGouraudShader();
     updateGL();
 }
 
@@ -324,7 +323,10 @@ QSize GLWidget::sizeHint() const {
 
 void GLWidget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
+    //enable trasparency
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_RGBA);
     glEnable(GL_DOUBLE);
 
@@ -356,7 +358,7 @@ void GLWidget::paintGL() {
     this->scene->lightsToGPU(program);
     this->scene->setAmbientToGPU(program);
     scene->draw();
-    //scene->drawTexture();
+
 }
 
 
