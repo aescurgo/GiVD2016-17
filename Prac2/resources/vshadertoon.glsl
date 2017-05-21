@@ -16,8 +16,8 @@ struct Light{
     vec3 specular;
     vec4 direction;
     vec4 position;
-    //float angle;
-    //float alpha;
+    float angle;
+    float alpha;
     vec3 coef;//atenuacion
 };
 

@@ -33,7 +33,7 @@ Camera::Camera(vec4 lookfrom, vec4 lookat, vec4 vup, float vfov, int viewX, int 
 
 Camera::Camera()
 {
-    origin = vec4(0.0, 0.0, 1.0, 1.0);
+    origin = vec4(0.0, 0.0, 10.0, 1.0);
 
     angX = 0;
     angY = 0;
