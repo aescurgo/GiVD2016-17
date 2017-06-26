@@ -45,4 +45,12 @@ Extras:
 
 - En la aplicación, he añadido otra opción para poder cambiar el componente Alpha del material, para si poder ver las trasparencia. Sólo implementado para Gouraud, Phong y Gouraud Textura.
 
+Resultado
+^^^^^^^^^^
+
+.. image:: gouraud.png
+.. image:: gouraud tex.png
+.. image:: gouraud_text_025.png
+
+
 
