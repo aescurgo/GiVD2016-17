@@ -48,16 +48,25 @@ Extras:
 Resultado
 ^^^^^^^^^^
 Gouroud, Texture & tranparency
+
 .. image:: gouraud.png
+
 .. image:: gouraud tex.png
+
 .. image:: gouraud_text_025.png
 
+
 Phong
+
 .. image:: phong.png
+
 .. image:: phongtex.png
 
+
 Toon
+
 .. image:: toon.png
+
 
 
 
