@@ -1,4 +1,4 @@
-GiV - P1
+GiV - P1 [Universitat de Barcelona 2016/17]
 ----------  
 ::
 
@@ -29,24 +29,16 @@ Features
 ^^^^^^^^
 
 - Figures
-    - [Alvaro] Plane
-    - [Alvaro - Enrique] Triangle
-    - [Profesores] Sphere
-    - [Alvaro - Enrique] Cube
-    - [Enrique] Boundary Object
+    - Plane
+    - Triangle
+    - Sphere
+    - Cube
 - Blinn-Phong
-    - [Alvaro] Light
-    - [Alvaro] Basic Blinn-Phong
-    - [Alvaro] Recursive Blinn-Phong
+    - Light
+    - Basic Blinn-Phong
+    - Recursive Blinn-Phong
 - Material
-    - [Alvaro - Enrique] Metal
-    - [-] Transparent
-    - [-] Isotropic
-    - [-] Volume
-
-Extensions
-^^^^^^^^^^
-
+    - Metal
 
 Screenshots
 ^^^^^^^^^^^
@@ -70,12 +62,4 @@ Escena: Triangulo
 
 .. image:: triangulo.png
 
-
-
-Additional Information
-^^^^^^^^^^^^^^^^^^^^^^
-Las horas de dedicación más de las que se aconseja en cada fase.
-Los problemas principales que hemos tenido, es a la hora de crear los objetos ya que requieren un nivel básico de algebra.
-Entender las formulas descritas en la teoria.
-Intentar crear las posiciones de los objetos en la escena, quizás es simple pero nos a costado.
 
